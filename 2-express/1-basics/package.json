@@ -1,0 +1,14 @@
+{
+  "name": "1-basics",
+  "version": "1.0.0",
+  "description": "- Bir URL ve HTTP methoduna gelen isteğin, hangi kodu çalıştıracağını belirleme işlemi",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
