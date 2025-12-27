@@ -1,8 +1,12 @@
 import { INPUTS } from "../../constants";
 import Input from "./input";
 import api from "../../service/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Form = () => {
+  const navigate = useNavigate();
+
   // form gönderilince
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,15 +19,24 @@ const Form = () => {
     movieData.genre = movieData.genre.split(",");
     movieData.cast = movieData.cast.split(",");
 
+    // rastgele bir fotoğraf ekle
+    movieData.image = `https://picsum.photos/seed/${Math.random() * 100}/400/600`;
+
+    // filmin süresini s/dk formatına çevir 128 ====> 2s 8dk
+    const hour = (movieData.duration / 60).toFixed(0);
+    const minute = movieData.duration % 60;
+    movieData.duration = `${hour}s ${minute}dk`;
+
     // api'a film oluşturmak için istek at
     api
       .post("/movies", movieData)
-      .then(() => {
-        alert("Yeni film oluşturuldu");
+      .then((res) => {
+        toast.success("Yeni film oluşturuldu");
+        navigate(`/movie/${res.data.id}`);
       })
       .catch((err) => {
         console.log(err);
-        alert("Hata oluştu");
+        toast.error("Hata oluştu");
       });
   };
 

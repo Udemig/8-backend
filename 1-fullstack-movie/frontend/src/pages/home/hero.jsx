@@ -1,4 +1,15 @@
-const Hero = () => {
+const Hero = ({ setSearchValue }) => {
+  // form gönderilince
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // inputa girilen yazıya eriş
+    const text = e.target[0].value.trim().toLowerCase();
+
+    // yazıyı state'e aktar
+    setSearchValue(text);
+  };
+
   return (
     <div className="relative px-6 py-24 md:py-32 overflow-hidden">
       {/* Arkaplan */}
@@ -14,17 +25,17 @@ const Hero = () => {
           Milyonlarca Film, Dizi ve Aktörleri Keşfedin
         </p>
 
-        <div className="mt-8 flex max-w-2xl glass rounded-2xl p-2 shadow-2xl">
+        <form onSubmit={handleSubmit} className="mt-8 flex max-w-2xl glass rounded-2xl p-2 shadow-2xl">
           <input
             type="text"
             className="flex-1 bg-transparent py-3 px-5 text-white placeholder:text-gray-300 outline-none text-lg"
             placeholder="Film, dizi veya aktör arayın..."
           />
 
-          <button className="btn-gradient px-8 py-3 font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg">
+          <button className="btn-gradient px-8 py-3 font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg cursor-pointer">
             Ara
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
