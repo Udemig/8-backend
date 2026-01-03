@@ -2,6 +2,7 @@ const express = require("express");
 const appointmentRoutes = require("./routes");
 const logger = require("./middleware/logger");
 
+
 // kurulum
 const app = express();
 const PORT = 3000;

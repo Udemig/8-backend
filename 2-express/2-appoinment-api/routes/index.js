@@ -20,7 +20,7 @@ const router = express.Router();
 router.get("/api/appointments", getAllAppointments);
 
 // doktara ait randevuları al
-router.get("/api/appointments/:doctor", getAppointmentsByDoctor);
+router.get("/api/appointments/doctor/:doctor", getAppointmentsByDoctor);
 
 // bir randevunu detayını al
 router.get("/api/appointments/:id", getAppointmentDetail);
