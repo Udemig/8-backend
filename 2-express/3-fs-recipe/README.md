@@ -57,7 +57,6 @@ export const name = "ali";
 // endpointleri ayrı ayrı tanımlama
 router.get("/api/recipes", getAllRecipes);
 router.post("/api/recipes", createRecipe);
-
 router.get("/api/recipes/:id", getOneRecipe);
 router.patch("/api/recipes/:id", updateRecipe);
 router.delete("/api/recipes/:id", deleteRecipe);
@@ -68,3 +67,14 @@ router.route("/api/recipes").get(getAllRecipes).post(createRecipe);
 
 router.route("/api/recipes/:id").get(getOneRecipe).patch(updateRecipe).delete(deleteRecipe);
 ```
+
+# Frontend Kütüphaneler
+
+- react
+- react-router-dom : sayfalama
+- tailwindcss : stillendirme
+- axios : api isteklerini atmayı kolaylaştırır
+- @tanstack/react-query : api'dan gelen cevabın state'ini yönetir
+- react-select : filtreleme özelliğine sahip bir select alanı sunar
+- lucide-react : iconlar'a erişmemizi sağlar
+- react-toastify : bildirim göndermek için kullanılır
