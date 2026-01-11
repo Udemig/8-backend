@@ -12,7 +12,7 @@ const App = () => {
       <div className="flex min-h-screen">
         <Sidebar />
 
-        <main className="flex-1 p-6 md:p-8 lg:p-10">
+        <main className="flex-1 p-6 md:p-8 lg:p-10 h-screen overflow-y-auto">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/tarif/:id" element={<Detail />} />

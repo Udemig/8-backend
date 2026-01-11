@@ -25,7 +25,7 @@ const writeData = (data) => {
 // tarif nesnesindeki bütün değişkenler tanımlımı kontrol eden fonk
 // eğer nesnedeki zorunlu bütün alanlar tanımlıysa true döndürmeli
 // bir alan bile tanımsız ise false döndürmeli
-const requiredFields = ["name", "category", "ingredients", "time", "instructions", "serving", "difficulty", "country"];
+const requiredFields = ["name", "category", "ingredients", "time", "instructions", "country"];
 
 const isValid = (body) => {
   // eksik bir alan var mı kontrol et

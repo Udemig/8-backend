@@ -27,3 +27,16 @@ export const links = [
     path: "/ayarlar",
   },
 ];
+
+export const selectStyles = {
+  control: (base, state) => ({
+    ...base,
+    borderColor: state.isFocused ? "#a8a29e" : "#e7e5e4",
+    boxShadow: state.isFocused ? "0 0 0 1PX #axa29e" : "none",
+    borderRadius: "0.5rem",
+    padding: "0.25rem",
+    "&:hover": {
+      borderColor: "#a8a29e",
+    },
+  }),
+};

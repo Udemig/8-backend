@@ -3,14 +3,15 @@ import { links } from "../../utils/constants";
 
 const Sidebar = () => {
   return (
-    <aside className="flex flex-col justify-between items-center py-8 px-2 md:px-5 border-r border-stone-200 bg-white max-md:gap-16 max-md:justify-normal">
+    <aside className="flex flex-col justify-between items-center py-8 px-2 md:px-5 border-r border-stone-200 bg-white max-md:gap-16 max-md:justify-normal h-screen">
       <div>
         <img src="/logo.jpg" alt="logo" className="w-20 rounded-xl object-cover md:w-30" />
       </div>
 
       <nav className="flex flex-col gap-2">
-        {links.map((i) => (
+        {links.map((i, key) => (
           <NavLink
+            key={key}
             to={i.path}
             className={({ isActive }) =>
               `flex gap-3 items-center px-4 py-3 rounded-lg transition-all duration-200 ${
