@@ -1,3 +1,13 @@
+# Enviroment Variables
+
+- Ortam / Çevre değişkenleri
+
+- Projeyi paylaşırken, admin şifresi / veritabanı bağlantı url / api key gibi hasas bilgileri paylaşmak istemeyiz
+
+- Bu noktada projenin çalışması için gerekli olan ama githuba göndermek istediğimiz değişkenleri .env dosyasında tanımlarız
+
+- .gitignore dosyasınıda .env dosyasını eklersek burada değişkenler kendi bilgisayarımızda çalışırken githuba asla gönderilmez
+
 # MongoDB Veri Türleri
 
 - string
