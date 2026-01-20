@@ -1,13 +1,14 @@
 import express from "express";
+import tourRoutes from "./routes/tourRoutes.js";
 
 // express uygulması oluştur
 const app = express();
 
-// yeni endpoint oluştur
-app.get("/api/tours", (req, res) => {
-  // clien'ta yanı gönder
-  res.json({ message: "Tur verileri listelendi" });
-});
+// middlewareler
+app.use(express.json());
+
+// tour route'larına projeye tanıt
+app.use(tourRoutes);
 
 // server.js'de kullanmak için export et
 export default app;
