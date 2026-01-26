@@ -1,28 +1,16 @@
 import Tour from "../models/tourModel.js";
-import qs from "qs";
+import APIFeatures from "../utils/apiFeatures.js";
 
 export const getAllTours = async (req, res) => {
   try {
-    //* client'dan gelen parametreler:    { 'rating[gt]': '4', 'price[lte]': '500' }
-    //* mongodb'nin istediği format:      { rating:{ $gt: 4 },  price: { $lte: 500 } }
+    // sorgular için kullanıcağımız filtreleme sıralama vb desteklere sahip sınıfı kullanalım
+    const features = new APIFeatures(Tour.find(), req.query, req.formattedQuery).filter().sort().select().pagination();
 
-    // 1) urldeki arama parametrelerine eriş
-    const queryObj = qs.parse(req.query);
-
-    // 2) string methodlarını kullanaiblmek için parametler nesnesini stringe çevir
-    let queryStr = JSON.stringify(queryObj);
-
-    // 3) bütün operatörlerin başına $ işareti koy
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|ne)\b/g, (found) => `$${found}`);
-
-    // 4) string formatındaki parametleri nesne formatına çevir
-    const parsedQuery = JSON.parse(queryStr);
-
-    // veritabanında tur verilerini al
-    const tours = await Tour.find(parsedQuery);
+    // sorguyu çalıştır
+    const tours = await features.query;
 
     // client'a yanıt gönder
-    res.json({ message: "Tur verisi listendi", parsedQuery, results: tours.length, data: tours });
+    res.json({ message: "Tur verisi listendi", results: tours.length, data: tours });
   } catch (error) {
     res.status(400).json({ message: "İşlem başarısız", error: error.message });
   }
@@ -102,5 +90,91 @@ export const deleteTour = async (req, res) => {
     res.status(204).json({ message: "Tur kaldırıldı" });
   } catch (error) {
     res.status(404).json({ message: "İşlem başarısız", error: error.message });
+  }
+};
+
+// en iyi turları almak için url'e eklenicek parametreleri belirleyen mw
+export const aliasTopTours = (req, res, next) => {
+  req.query.sort = "-ratingsAverage,-ratingsQuantity";
+  req.query.fields = "name,price,imageCover,summary,ratingsAverage,ratingsQuantity";
+  req.query.limit = "5";
+
+  next();
+};
+
+// admin paneli için istatistik hesaplayan fn
+export const getTourStats = async (req, res) => {
+  try {
+    // Aggregation Pipeline
+    // Raporlama Adımları
+    const stats = await Tour.aggregate([
+      // 1.Adım) ratingi 4 ve üzeri olan turları al
+      { $match: { ratingsAverage: { $gte: 4 } } },
+      // 2.Adım) zorluğa göre gruplandır ve ortalama değerlerini hesapla
+      {
+        $group: {
+          _id: "$difficulty",
+          count: { $sum: 1 },
+          avgRating: { $avg: "$ratingsAverage" },
+          avgPrice: { $avg: "$price" },
+          minPrice: { $min: "$price" },
+          maxPrice: { $max: "$price" },
+        },
+      },
+      // 3.Adım) gruplanan veriyi zorluk isimlerine göre sırala
+      { $sort: { _id: 1 } },
+    ]);
+
+    res.status(200).json({ message: "Rapor oluşturuldu", stats });
+  } catch (error) {
+    res.status(500).json({ message: "İşlem başarısız", error });
+  }
+};
+
+// bir yıl için aylık planı raporlayan fn
+export const getMonthlyPlan = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      {
+        $unwind: {
+          path: "$startDates",
+        },
+      },
+      {
+        $match: {
+          startDates: {
+            $gte: new Date("2021-01-01"),
+            $lte: new Date("2021-12-31"),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $month: "$startDates",
+          },
+          count: {
+            $sum: 1,
+          },
+          tours: {
+            $push: "$name",
+          },
+        },
+      },
+      {
+        $addFields: {
+          month: "$_id",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ]);
+
+    res.status(200).json({ message: "Rapor oluşturuldu", data: stats });
+  } catch (error) {
+    res.status(500).json({ message: "İşlem başarısız", error });
   }
 };
