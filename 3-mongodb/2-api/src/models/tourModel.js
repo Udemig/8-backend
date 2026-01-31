@@ -6,15 +6,26 @@
 */
 
 import mongoose from "mongoose";
+import validator from "validator";
 
 // veritabanına kaydedilecek tur verisinin zorunlu alanlarını tanımladığımız şema
 const tourSchema = new mongoose.Schema(
   {
-    name: { type: String, required: [true, "İsim zorunludur"] },
+    name: {
+      type: String,
+      required: [true, "İsim zorunludur"],
+      validate: [(val) => validator.isAlphanumeric(val, "tr-TR", { ignore: " " }), "İsimde özel karaktrer olamaz"],
+    },
 
     duration: {
       type: Number,
       required: [true, "Süre zorunludur"],
+    },
+
+    premium: { type: Boolean },
+
+    durationHour: {
+      type: Number,
     },
 
     maxGroupSize: { type: Number, required: [true, "Grup Sayısı zorunludur"] },
@@ -39,6 +50,19 @@ const tourSchema = new mongoose.Schema(
 
     price: { type: Number, min: [0, "Fiyat 0'dan küçük olamaz"], required: [true, "Fiyat zorunludur"] },
 
+    priceDiscount: {
+      type: Number,
+
+      // custom validator (kendi yazdığımız kontrol methodları)
+      // doğrulama fonksiyonları false return ederse doğrulamadan geçmedi anlamına gelir ve belge veritabanına kaydedilmez, true return ederse doğrulamadan geçti anlamına gelir ve veritabanına kaydedilir
+      validate: {
+        validator: function (value) {
+          return value < this.price;
+        },
+        message: "İndirim fiyatı asıl fiyattan büyük olamaz",
+      },
+    },
+
     summary: { type: String, required: [true, "Özet zorunludur"] },
 
     description: { type: String, required: [true, "Açıklama zorunludur"] },
@@ -49,8 +73,47 @@ const tourSchema = new mongoose.Schema(
 
     startDates: { type: [Date], required: [true, "Başlangıç tarihleri zorunludur"] },
   },
-  { versionKey: false },
+  { versionKey: false, toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
+
+//! Virtual Property (Sanal Özellik)
+// Örn: Şuan veritabanına turların fiyatlarını ve indirim fiyatını tutuyoruz ama frontend bizden indiirimli fiyatıda istedi. Bu noktada indirimli fiyatı veritabanında tutmak gereksiz bir maaliyet olur. Bunun yerine cevap gönderme sırasında indirimli fiyat alanını hesaplayıp gönderilecek cevaba eklersek hem frontend'in ihtiyacını karşılamış oluruz hem de veritabanında gereksiz veri olmaz
+tourSchema.virtual("discountedPrice").get(function () {
+  return this.price - this.priceDiscount;
+});
+
+// Örn: Fronten bizden yönlendirme için ürünlerin slug verisini istedi. Bu noktada bu alanı zaten tur ismi üzerinden hesaplayabilceğimiz için veritbanına kaydetmeden virtual property olarak göndermek mantıklı olur
+// Ege Doğa Gezisi ===> ege-doğa-gezisi
+tourSchema.virtual("slug").get(function () {
+  return this.name.replaceAll(" ", "-").toLowerCase();
+});
+
+//! Document Middleware
+// Bir belgenin kaydedilme, güncelleme, silinme, okunma gibi olaylarından önc eveya sonra gerçekleştirlmesi gerek işlemleri belirlemek için kullanılır.
+// Örn: Client'tan gelen tur versisinin veritbanına kaydedilmeden önce bir işlemden geçmesini istediğimizde kullanılabilir
+tourSchema.pre("save", function () {
+  // gerekli işlemleri yap
+  this.durationHour = this.duration * 24;
+});
+
+//? pre() işlemden önce post() işlemden sonra middleware'i çalıştırmaya yarar
+tourSchema.post("findOneAndUpdate", function (doc) {
+  // kullanıncın şifresini güncelleme işleminden sonra kullanıcıya mail gönderilir..
+  console.log(doc._id + " kullanıcıya mail göndeirildi");
+});
+
+//! Query Middleware
+// Sorgulardan önce/sonra çalışan fonksiyonlar
+tourSchema.pre("find", function () {
+  // premium olan turları dahil etme
+  this.find({ premium: { $ne: true } });
+});
+
+//! Aggregate Middleware
+tourSchema.pre("aggregate", function () {
+  // premium olan turları rapora dahil etme
+  this.pipeline().unshift({ $match: { premium: { $ne: true } } });
+});
 
 // yukarıdaki şemayı kullanarak bir model oluştur
 const Tour = mongoose.model("Tour", tourSchema);

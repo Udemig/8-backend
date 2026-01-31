@@ -1,5 +1,6 @@
 import express from "express";
 import tourRoutes from "./routes/tourRoutes.js";
+import User from "./models/userModel.js";
 
 // express uygulması oluştur
 const app = express();

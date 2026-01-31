@@ -192,3 +192,50 @@
 - Belirli Değer Aralığı
 - `{age: {$gt:30, $lt:40}}`
 - Belirli aralıktaki değerleri almak yöntemi
+
+# Virtual Property
+
+- Client'a gönderilmesi gereken ama veritabanında tutulması gereksiz yük oluşturucak verileri, veritabanında saklamak yerine veriyi client'a gönderirken hesaplayıp ekleme yöntemidir
+
+# Validators
+
+- Veritabanına veriyi kaydetmeden önce kontrol etmemizi sağlayan 3 çeşit validator vardır:
+
+1. Built-in Validators: Mongoose içerisinde yer alan (min,max,required,enum) gibi yöntemler
+2. Custom Validators: Proje ihitiyaçlarına göre kendi yazdığımız fonksiyonlar
+3. Third Party Validator: Bir kütüphane üzerinden kullandığımız fonksiyonlar
+
+# Kullanıcı İşlemleri
+
+## Authentication
+
+- Kimlik Doğrulama
+
+## Hash ve Salt
+
+- Hashleme ve saltlama, verilerin güvenli bir şekilde saklanması ve özellikle parolaların korunması için kullanılan tekniklerdir
+
+- **🔐 Hashleme**
+- Hashleme, veriyi alıp sabit uzunlukta, geri döndürülemez bir çıktıya dönüştüren matematiksel bir işlemdir.
+- Hash fonksiyonları tek yönlüdür, yani elde edilen hash değerinden orijinal veri geri elde edilemez.
+- Aynı girdi, aynı hash çıktısını üretir.
+- Denem@123 ----hash----> asnmıjsdy1823!enm5458@1e7ywqeer
+- Denem@123 ----hash----> asnmıjsdy1823!enm5458@1e7ywqeer
+
+- **🧂 Saltlama**
+- Saltlama, hashleme işlemine ekstra bir güvenlik katmanı eklemek için kullanılır.
+- Salt, parolaya hashlenmeden önce eklenen rastgele üretilmiş bir dizidir.
+- Salt, her kullanıcı için farklıdır.
+- Denem@123 ----salt----> rastgele-Denem@123-rastgele
+- rastgele-Denem@123-rastgele ----hash----> fdsfjkdıaoshfuaıs1263602@166371263
+
+- **Özetle**
+- - Hash, şifreyi geri döndürelemez hale getirir. Salt aynı şifrenin aynı hash'i üretmesini engeller
+
+## JWT Token
+
+## Authorization
+
+## Şifremi Unuttum
+
+## Mail Gönderme
