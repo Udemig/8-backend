@@ -10,18 +10,19 @@ import {
   getMonthlyPlan,
 } from "../controllers/tourController.js";
 import formatQuery from "../middlewares/formatQuery.js";
+import { protect } from "../middlewares/protect.js";
 
 const router = express.Router();
 
 // TODO: Düzelt
-router.route("/api/tours/top-tours").get(aliasTopTours, formatQuery, getAllTours);
+router.route("/top-tours").get(aliasTopTours, formatQuery, getAllTours);
 
-router.route("/api/tours/stats").get(getTourStats);
+router.route("/stats").get(protect, getTourStats);
 
-router.route("/api/tours/monthly-plan/:year").get(getMonthlyPlan);
+router.route("/monthly-plan/:year").get(protect, getMonthlyPlan);
 
-router.route("/api/tours").get(formatQuery, getAllTours).post(createTour);
+router.route("/").get(formatQuery, getAllTours).post(protect, createTour);
 
-router.route("/api/tours/:id").get(getOneTour).patch(updateTour).delete(deleteTour);
+router.route("/:id").get(getOneTour).patch(protect, updateTour).delete(protect, deleteTour);
 
 export default router;

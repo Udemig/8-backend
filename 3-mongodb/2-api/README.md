@@ -209,7 +209,7 @@
 
 ## Authentication
 
-- Kimlik Doğrulama
+- Kimlik Doğrulama, email / şifre, face id, parmak izi, google hesabı
 
 ## Hash ve Salt
 
@@ -232,9 +232,48 @@
 - **Özetle**
 - - Hash, şifreyi geri döndürelemez hale getirir. Salt aynı şifrenin aynı hash'i üretmesini engeller
 
-## JWT Token
+## JWT (JSON Web Token)
+
+- Sunucu ve client arasında güvenli bir şekilde bilgi alışverişi yapmak için kullanılır
+- Sunucuudan oluşturulan kullanıcı oturmunun bilgileri bir token şeklinde client'a aktarılır.
+- Client bu tokenı saklar ve yetki gerektiren her api isteğinde token ilke birlikte istek ara bu sayede sunucu tarafında kullanıcı oturumunu doğrulayabiliriz
+
+- JWT 3 ana bileşenden oluşur ve bu bileşenler . ile birbirinden ayrılır:
+- Header (Başlık)
+- Payload (Veri)
+- Siganture (İmza)
+
+* Header:
+* - Tokenın imzalanmasında kullanılan algoritmayı bertir
+* - Tokenın türünü belirtir
+
+* Payload:
+* - Payload token içerisinde taşınıcak bilgileri içerir. Bu bilgiler genellikle kullanıcının kimlik bilgileri ve yetkilendirme detayları (rolü) olur
+* - iss: oluşturulma tarihi ve exp: tokenın son geçerlilik tarihi de yer alır
+
+* Signature:
+* - Tokenı oluşturuken eklenen ve tokenın doğrulanması için kullanılan ifadedir.
+* - bU-FfURL@KAN-Im!!!1sımmflkasdfm
+
+## Cookies (Çerezler)
+
+- Cookies, backend'in tarayıcıya gönderdiği ve tarayıcının saklayıp her istekte backende geri gönderdiği küçük verilerdir.
+- Client <> Cookie <> Backend
+
+- **Backend'de Ne İçin Kullanılır**
+- Authentication (JWT'yi cookie'de tutmak)
+- Oturumu Yönetimi (Sepet Bilgisi, Tema, Dil)
+- Sadece HTTP üzerinde seyahet ettikleri için bu tarz kullanıcıya özel bilgilerin başkaları tarafından erişilememesi için cookie ile göndermeyi terchi ederiz
 
 ## Authorization
+
+- Yetkilendirme, kimlik doğrulama sürecinin devamında gerçekleştirdiğimiz ve kullanıcın yetkilerinin belirlendiği süreç.
+- Bir kullanıcnın sistemin kayanklarına erşimini kontrol etme sürecidir
+- Kimliğini doğruladığımız kullanıcnın neleri yapıp neleri yapımayacığını belirleriz.
+- örn:
+- getAllTours endpointine henüz oturumu açık olamayan kullanıcılar bile erişebilmeli
+- createTour endpointine sadece oturumu açık olan ve yeterli rolü olan kullanıclar erişebilmeli
+- istatistik endpointlerine sadece oturumu açık olan ve admin rolü olan kullanıclar erişebilmeli
 
 ## Şifremi Unuttum
 

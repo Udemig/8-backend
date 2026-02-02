@@ -55,24 +55,31 @@ const userSchema = new Schema(
     },
   },
   // timeStamps: belgeye otomatik olarak createdAt ve updatedAt alanları ekler
-  { timestamps: true, versionKey: false },
+  {
+    timestamps: true,
+    versionKey: false,
+    // client'a veri gönderilmeden hemen önce json formatında çevrilirken çalışır
+    toJSON: {
+      transform: function (doc, ret) {
+        // password alanını client'a göndermek istediğimiz için gönderilecek belgeden çıkarıyoruz
+        delete ret?.password;
+      },
+    },
+  },
 );
 
 //? Veritabanına kaydedilmeden önce:
 //* passwordConfirm alanını kaldır
 //* password alanını şifreleme algoritmaları ile şifrele
-userSchema.pre("save", async function (doc, next) {
+userSchema.pre("save", async function () {
   // kaydedilen kullanıcı parolasını değiştirmediyse fonksiyonu durdur
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password")) return;
 
   // şifreyi saltla ve hashle
   this.password = await bcrypt.hash(this.password, 10);
 
   // onay şifresini kaldır
   this.passwordConfirm = undefined;
-
-  // sonraki işleme devam et
-  next();
 });
 
 const User = model("User", userSchema);
