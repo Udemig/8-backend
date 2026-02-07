@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { BadRequest, Unauthorized } from "../utils/errors.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -20,7 +21,7 @@ const createSendToken = (user, res) => {
   });
 
   // client'a a cevap gönder
-  res.status(200).json({ message: "Oturum Açıldı", user });
+  res.status(200).json({ message: "Oturum Açıldı", token, user });
 };
 
 // --------------- Kaydol --------------------
@@ -49,20 +50,20 @@ export const login = async (req, res) => {
 
     //2) email ve şifre geldi mi kontrol et
     if (!email || !password) {
-      return res.status(400).json({ message: "Lütfen email ve şifre giriniz" });
+      return next(new BadRequest("Lütfen email ve şifre giriniz"));
     }
 
     //3) client'dan gelen email sahip kullanıcıyı ara
     const user = await User.findOne({ email });
 
     //3.1) eğer emaile sahip kullanıcı bulunamazsa hata gönder
-    if (!user) return res.status(401).json({ message: "Email veya şifre hatalı" });
+    if (!user) return next(new Unauthorized("Email veya şifre hatalı"));
 
     //4) client'dan gelen şifre ile veritabanındaki şifre eşleşiyor mu kontrol et
     const isValid = await bcrypt.compare(password, user.password);
 
     //4.1) şifre yanlışsa hata gönder
-    if (!isValid) return res.status(401).json({ message: "Email veya şifre hatalı" });
+    if (!isValid) return next(new Unauthorized("Email veya şifre hatalı"));
 
     //5) jwt tokenını oluştur gönder
     createSendToken(user, res);

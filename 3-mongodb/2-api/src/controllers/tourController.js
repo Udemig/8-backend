@@ -1,5 +1,6 @@
 import Tour from "../models/tourModel.js";
 import APIFeatures from "../utils/apiFeatures.js";
+import { NotFound } from "../utils/errors.js";
 
 export const getAllTours = async (req, res) => {
   try {
@@ -27,7 +28,7 @@ export const getOneTour = async (req, res) => {
 
     // eğerki tur bulunamamışsa hata döndür
     if (!tour) {
-      return res.status(404).json({ message: "İşlem başarısız", error: "Aradığınız tur bulunamadı" });
+      return next(new NotFound("Aradığınız tur bulunamadı"));
     }
 
     // client'a cevap gönderme
@@ -63,7 +64,7 @@ export const updateTour = async (req, res) => {
 
     // gelen id parametresine kayıtlı tur yoksa hata döndür
     if (!tour) {
-      return res.status(404).json({ message: "İşlem başarısız", error: "Tur bulunamadı" });
+      return next(new NotFound("Aradığınız tur bulunamadı"));
     }
 
     // client'a cevap gönder
@@ -74,6 +75,9 @@ export const updateTour = async (req, res) => {
 };
 
 export const deleteTour = async (req, res) => {
+  // bu endpointe şuan kim istek atıyor
+  console.log("İşlemi yapmaya çalışan kullanıcı:", req.user);
+
   try {
     // url'den gelen id parametresini al
     const id = req.params.id;
@@ -83,7 +87,7 @@ export const deleteTour = async (req, res) => {
 
     // id parametresine karşılık belge yoksa hata döndür
     if (!tour) {
-      return res.status(404).json({ message: "İşlem başarısız", error: "Tur bulunamadı" });
+      return next(new NotFound("Aradığınız tur bulunamadı"));
     }
 
     // client'a cevap gönder

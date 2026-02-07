@@ -272,9 +272,20 @@
 - Kimliğini doğruladığımız kullanıcnın neleri yapıp neleri yapımayacığını belirleriz.
 - örn:
 - getAllTours endpointine henüz oturumu açık olamayan kullanıcılar bile erişebilmeli
-- createTour endpointine sadece oturumu açık olan ve yeterli rolü olan kullanıclar erişebilmeli
-- istatistik endpointlerine sadece oturumu açık olan ve admin rolü olan kullanıclar erişebilmeli
+- createTour endpointine sadece oturumu açık olan ve yeterli rolü olan kullanıcılar erişebilmeli
+- istatistik endpointlerine sadece oturumu açık olan ve admin rolü olan kullanıcılar erişebilmeli
 
 ## Şifremi Unuttum
 
 ## Mail Gönderme
+
+# Global Hata Yönetimi
+
+- Uygulamanın herhangi bir yerinde oluşan hataların tek bir merkezden yakalnıp, standart ve kontrollü şekilde client'a dönülmesini sağlayan yapıdır
+
+- **Neden Kullanılmalı?**
+- Hata formatını tek tip yapar
+- try/catch tekrarını azaltır
+- 500 gibi sunucu hatalarını kontrol atına aldık
+- Okunabilirliği arttırır
+- Daha profosyonel
