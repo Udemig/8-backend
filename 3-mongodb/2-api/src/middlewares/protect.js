@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import { Unauthorized, Forbidden } from "../utils/errors.js";
+import catchAsync from "../utils/catchAsync.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -9,7 +10,7 @@ dotenv.config();
 // * Token geçersiz ise route'a erişimine izin vermeyip hata fırlat
 // * Token geçerliyse route'a erişmesine izin ver
 
-export const protect = async (req, res, next) => {
+export const protect = catchAsync(async (req, res, next) => {
   // 1) çerez veya header ile gelen tokeni al
   let token = req.cookies.jwt || req.headers.authorization; // oturumu kapalıysa: undefined | açıksa: eyJhbGciOiJIUzI1NiIsInR5cCI...
 
@@ -19,16 +20,14 @@ export const protect = async (req, res, next) => {
   }
 
   // 1.3) token gelmediyse hata fırlat
-  if (!token) {
-    return next(new Unauthorized());
-  }
+  if (!token) throw new Unauthorized();
 
   // 2) token'ın geçerliliğini doğrula (zaman aşımına uğradımı | imza doğru mu)
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
-    return next(new Unauthorized());
+    throw new Unauthorized();
   }
 
   // 3) token'ın ile gelen kullanıcnın hesabı duruyor mu
@@ -36,18 +35,14 @@ export const protect = async (req, res, next) => {
   try {
     activeUser = await User.findById(decoded.id);
   } catch (error) {
-    return next(new Unauthorized());
+    throw new Unauthorized();
   }
 
   // 3.1) hesap silindiyse / mevcut değilse hata fırlat
-  if (!activeUser) {
-    return next(new Unauthorized());
-  }
+  if (!activeUser) throw new Unauthorized();
 
   // 3.2) hesap dondurulduysa hata fırlat
-  if (!activeUser.active) {
-    return next(new Unauthorized());
-  }
+  if (!activeUser.active) throw new Unauthorized();
 
   //todo: kullanıcıya tokenı verdikten sonra şifresini sıfırlamış mı
 
@@ -56,7 +51,7 @@ export const protect = async (req, res, next) => {
 
   // sonraki adıma geç
   next();
-};
+});
 
 // ------ Rol Kontrolü Yapıcak Middleware -------
 // * İstek atan kullanıcnın rolü fonksiyonun parametre olarak aldığı rollerden biriyse:
