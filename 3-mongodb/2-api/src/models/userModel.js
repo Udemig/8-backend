@@ -2,6 +2,7 @@ import { model, Schema } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import sendMail from "../utils/sendMail.js";
 
 // Kullanıcı Şeması
 const userSchema = new Schema(
@@ -92,15 +93,59 @@ userSchema.pre("save", async function () {
 //? Belge güncellendiğinde çalışır:
 //* şifre güncellendiyse
 //* şifre değişim tarihini belgeye ekle
-userSchema.pre("save", function (next) {
+userSchema.pre("save", function () {
   // eğer şifre alanı güncellenmediyse veya döküman daha yeni oluşturulduysa bu mw'i atla sıradaki adımla devam et
-  if (!this.isModified("password") || this.isNew) return next();
+  if (!this.isModified("password") || this.isNew) return;
 
   // şifre değiştirme tarihini güncelle
   // şifre değişiminden hemen sonra jwt tokenı oluşturusak tarih çakışması yaşanmamsı için şifre güncelleme tarihini 1 saniye az gir
   this.passwordChangedAt = Date.now() - 1000;
 
-  next();
+  // bilgilendirme maili gönder
+  sendMail({
+    to: this.email,
+    subject: "Tourify Hesabı Şifreniz Güncellendi",
+    html: `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; margin:0 auto; font-family:Arial, sans-serif; background:#ffffff; border-radius:16px; padding:24px; box-shadow:0 6px 18px rgba(0,0,0,0.05);">
+  
+  <tr>
+    <td style="font-size:20px; font-weight:bold; color:#111827; padding-bottom:12px;">
+      Şifreniz Başarıyla Değiştirildi
+    </td>
+  </tr>
+
+  <tr>
+    <td style="font-size:14px; color:#374151; line-height:22px; padding-bottom:16px;">
+      Merhaba <strong>${this.name}</strong>,<br><br>
+      <strong>${this.email}</strong> adresine bağlı Tourify hesabınızın şifresi başarıyla güncellendi.
+      Eğer bu işlem size aitse herhangi bir aksiyon almanıza gerek yoktur.
+    </td>
+  </tr>
+
+  <tr>
+    <td style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:14px; font-size:13px; color:#374151; line-height:20px;">
+      <strong>Bu işlem size ait değilse:</strong><br>
+      • Hesabınızın şifresini hemen tekrar değiştirin.<br>
+      • Hesabınıza bağlı oturumları kontrol edin.<br>
+      • Destek ekibimizle iletişime geçin.
+    </td>
+  </tr>
+
+  <tr>
+    <td style="padding-top:20px; font-size:12px; color:#6b7280; line-height:18px;">
+      Bu e-posta otomatik olarak gönderilmiştir. Güvenliğiniz için şifrenizi kimseyle paylaşmayın.
+      <br><br>
+      © 2026 Tourify
+    </td>
+  </tr>
+</table>`,
+  });
+});
+
+//? Find sorgularında çalışır:
+//* inaktif hesapları filtrelemeye dahil etme
+userSchema.pre(/^find/, function () {
+  // sorguya inaktif hesapları dahil etme
+  this.find({ active: { $ne: false } });
 });
 
 //? Model'in içerine tanımlı bir fonksiyon

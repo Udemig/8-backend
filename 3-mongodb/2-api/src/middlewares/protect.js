@@ -44,7 +44,15 @@ export const protect = catchAsync(async (req, res, next) => {
   // 3.2) hesap dondurulduysa hata fırlat
   if (!activeUser.active) throw new Unauthorized();
 
-  //todo: kullanıcıya tokenı verdikten sonra şifresini sıfırlamış mı
+  // 4) kullanıcıya tokenı verdikten sonra şifresini değiştirmiş mi
+  if (activeUser?.passwordChangedAt) {
+    const passwordChangedSeconds = activeUser.passwordChangedAt.getTime() / 1000;
+    const tokenCreatedSeconds = decoded.iat;
+
+    if (passwordChangedSeconds > tokenCreatedSeconds) {
+      throw new Forbidden("Yakın zamanda şifrenizi değiştiridiz. Lütfen tekrar giriş yapın");
+    }
+  }
 
   // bu mw'den sonra çalışıcak fonksiyonların kullanıcı bilgisine erişmesi için req nesnesine ekle
   req.user = activeUser;

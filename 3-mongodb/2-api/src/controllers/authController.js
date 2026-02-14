@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { BadRequest, NotFound, Unauthorized } from "../utils/errors.js";
+import { BadRequest, Unauthorized } from "../utils/errors.js";
 import catchAsync from "../utils/catchAsync.js";
 import sendMail from "../utils/sendMail.js";
 import dotenv from "dotenv";
@@ -134,4 +134,25 @@ export const resetPassword = catchAsync(async (req, res) => {
 
   // 5) client'a cevap gönder
   res.status(200).json({ message: "Şifreniz başarıyla güncellendi" });
+});
+
+// -------------- Şifremi Güncelle ------------
+
+export const updatePassword = catchAsync(async (req, res, next) => {
+  // 1) kullanıcnın bilgilerini al
+  const user = req.user;
+
+  // 2) gelen mevcut şifre doğru mu kontrol et
+  const isCorrect = await bcrypt.compare(req.body.currentPassword, user.password);
+
+  // 2.1) şifre yanlışsa hata gönder
+  if (!isCorrect) throw new BadRequest("Mevcut şifre hatalı girildi");
+
+  // 3) şifre doğruysa yeni şifreyi kaydet
+  user.password = req.body.newPassword;
+  user.passwordConfirm = req.body.newPasswordConfirm;
+  user.save();
+
+  // (opsiyonel) token oluştur - yeniden giriş yapmasını istemiyorsak
+  return createSendToken(user, res);
 });
