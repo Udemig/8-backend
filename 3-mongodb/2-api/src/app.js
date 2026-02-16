@@ -5,11 +5,33 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import { NotFound } from "./utils/errors.js";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
 
 // express uygulması oluştur
 const app = express();
 
+// rate limit
+const loginRateLimit = rateLimit({
+  windowMs: 5 * 60 * 100,
+  max: 5,
+  message: "Kısa süre içerisinde çok fazla deneme yaptınız lütfen daha sonra tekrar deneyiniz",
+});
+const generalRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 50,
+  message: "Kısa süre içerisinde çok fazla deneme yaptınız lütfen daha sonra tekrar deneyiniz",
+});
+
 // middlewareler
+app.use("/api/auth/", loginRateLimit);
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/auth")) return next();
+  generalRateLimit(req, res, next);
+});
+app.use(mongoSanitize());
+app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 

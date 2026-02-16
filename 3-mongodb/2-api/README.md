@@ -289,3 +289,99 @@
 - 500 gibi sunucu hatalarını kontrol atına aldık
 - Okunabilirliği arttırır
 - Daha profosyonel
+
+# Data Modeling
+
+- Data modeling, bir uygulamada verilerin nasıl saklanacağını, biribirleriyle nasıl ilişkilendirliceğini nasıl erişleceğini tanımlama sürecidir. Busüreç projenin ihitiyaçlarını karşılama adına veritabanı tasarımını planlamak için kullanılır. Amaç, karmaşık veri setlerinin daha anlaşılabilir,düzenli,erişilebilir bir şekilde organize edilmesini sağlamaktır.
+
+## Aşamalar
+
+1. Gereksinim Analizi
+
+- - Uygulamanın hangi verilerle çalışıcağı belirlenir
+- - Verilerin nasıl kullanılacağını ve hangi sorgularun yapılacağı analiz edilir
+
+2. Varıkların Tanımlanması
+
+- - Veritabanında temsil edilecek nesneler belirlenir (Ürünler,Siparişler,Kullanıcılar)
+- - Her nesnenin özellikleri belirlenir (ad, eposta, şifre, yaş)
+
+3. İlişkilerin Tanımlanması
+
+- - Verilerin arasındaki ilişkiler belirlenir (örn: Sipariş nesnesinde kullanıcı verisi nasıl tutulacak)
+- - İlişki türleri
+- - Embed | Refferance
+- - One To One | One To Many | Many To Many
+
+4. Performans Optimizasyonu ve Indeksleme
+
+- Sık yapılan sorgularda indeksleme yapılır.
+- Veri modelki sorgu perfromansını arttırıcak şekilde optimize edilir
+
+# İlişki Türleri
+
+- One to One (1:1): Bir kolleksiyondaki her kayıt diğer kolleksiyondaki tek bir kayıt ile işikilendirilir (Mağaza > Sahip)
+
+- One to Many (1:Many): Bir kolleksiyondaki her kayıt diğer kolleksiyondaki birden çok kayıt ile işikilendirilir (Kullanıcı > Sipariş)
+
+- Many to Many (Many:Many): Bir kolleksiyondaki birden çok kayıt diğer kolleksiyondaki birden çok kayıt ile işikilendirilir (Mağaza > Ürün)
+
+# Embed vs Referance
+
+1. Referancing (Referans / Normalization):
+
+- Referans, belirli belgedeki verileri bir başka belgeye referans (id) kullanılarak ilişkilendirmeye yarar.
+- Yani iki belge arasında ilişki vardır ancak gerçek veri bir belgede saklanırken diğer belgede sadece gerçek verinin referansı mevcut
+
+2. Embedding (Gömme / Denormalization):
+
+- Berlirli bir belgenin içerisindeki verileri diğer belgere doğrudan gömülü olarak tanımlamaya yarar
+
+# Hangi Yöntemi Tercih Edicem ?
+
+- Birlikte okunuyorsa embed, ayrı büyüyorsa reference.
+
+- **Embedding Ne Zaman?**
+- Veri küçükse
+- Sık birlikte kullanıyorsa
+- Nadiren güncelleniyorsa
+- Tek owner varsa
+
+- **Refferance Ne Zaman?**
+- Veri çok büyüyorsa
+- Belge ayrı lazım oluyorsa
+- Sık güncelleniyorsa
+- Birden fazla yerde kullanılıyorsa
+
+# Parent vs Child Refferance
+
+- Bu kavram, referanslı modelleme yaparken ID'nin hangi tarafta tutulacağına karar verme meselesidir
+
+# Parent Refferance
+
+- Child sayısı çoksa
+- Pagination Gerekiyor
+- Child bağımsız bir belge ise
+- Performans kritikse
+
+```jsx
+Order({
+  userId: 1,
+  totalPrice,
+  createdAt,
+});
+```
+
+# Child Refferance
+
+- Child sayısı azsa
+- Liste sabit / küöükse
+- Hızlı erişim gerekiyor
+
+```jsx
+User({
+  name,
+  email,
+  orders: [7, 93, 75],
+});
+```
