@@ -6,7 +6,9 @@
   "main": "./src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "import": "node ./src/dev-data/commands.js --import",
+    "clear": "node ./src/dev-data/commands.js --clear"
   },
   "author": "",
   "license": "ISC",

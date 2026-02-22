@@ -375,7 +375,7 @@ Order({
 # Child Refferance
 
 - Child sayısı azsa
-- Liste sabit / küöükse
+- Liste sabit / küçükse
 - Hızlı erişim gerekiyor
 
 ```jsx
@@ -385,3 +385,9 @@ User({
   orders: [7, 93, 75],
 });
 ```
+
+# Populate
+
+- `populate`, Bir mongodb belgesini sorguladığımızda, o belgenin içerisinde referans olarak verilen başka bir kolleksiyondaki belgeyi/belgeleri otomatik olarak doldurmamızı sağlayan yöntemdir.
+- Referans olarak tanımladığımız id'ler için arkaplanda bir sorgu daha yapıp ardından iki sorgunun verilerini birleştirir.
+- SQL'deki JOIN yönteminin bir benzeridir

@@ -20,7 +20,8 @@ export const getOneTour = catchAsync(async (req, res) => {
 
   // veritabanından id'si bilinen turu al
   // const tour = await Tour.findOne({_id: id}); // Muadil
-  const tour = await Tour.findById(id);
+  // populate(): ref olarak tanımlanan id'lerin yerine ilgili belgeri getirir
+  const tour = await Tour.findById(id).populate("guides", "name photo role -_id").populate("reviews", "-tour");
 
   // eğerki tur bulunamamışsa hata döndür
   if (!tour) {

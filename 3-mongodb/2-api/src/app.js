@@ -3,11 +3,11 @@ import cookieParser from "cookie-parser";
 import tourRoutes from "./routes/tourRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import { NotFound } from "./utils/errors.js";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
-import mongoSanitize from "express-mongo-sanitize";
 
 // express uygulması oluştur
 const app = express();
@@ -30,7 +30,6 @@ app.use((req, res, next) => {
   if (req.path.startsWith("/api/auth")) return next();
   generalRateLimit(req, res, next);
 });
-app.use(mongoSanitize());
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
@@ -39,6 +38,7 @@ app.use(cookieParser());
 app.use("/api/tours", tourRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // tanımlanmayan route'a istek atılırsa hata gönder
 app.use((req, res, next) => next(new NotFound()));

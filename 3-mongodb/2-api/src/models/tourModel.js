@@ -72,15 +72,44 @@ const tourSchema = new mongoose.Schema(
     images: { type: [String], required: [true, "Fotoğraflar zorunludur"] },
 
     startDates: { type: [Date], required: [true, "Başlangıç tarihleri zorunludur"] },
+
+    // embedding
+    startLocation: {
+      description: String,
+      type: { type: String, default: "Point", enum: ["Point"] },
+      coordinates: [Number],
+      address: String,
+    },
+
+    // embedding
+    locations: [
+      {
+        description: String,
+        type: { type: String, default: "Point", enum: ["Point"] },
+        coordinates: [Number],
+        day: Number,
+      },
+    ],
+
+    // referecing (child)
+    guides: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   },
-  { versionKey: false, toJSON: { virtuals: true }, toObject: { virtuals: true } },
+  { id: false, versionKey: false, toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
+
+//! Virual Populate
+// Normalde biz yorumların id'lerini tur belgesi içerisinde saklamamıza rağmen  tur bilgilerini client'a gönderirken yorumları da dahil etmek istiyoruz. Bu noktada yorum id'leri normalde tur içerisinde kayıtlı olmamasına rağmen virtual populate sayesinde yorumları da dahil edebiliriz
+tourSchema.virtual("reviews", {
+  ref: "Review", // ilişkilendirilmek istenen model
+  localField: "_id", // tur modelindeki id alanı
+  foreignField: "tour", // yorum modelindeki tur alanı
+});
 
 //! Virtual Property (Sanal Özellik)
 // Örn: Şuan veritabanına turların fiyatlarını ve indirim fiyatını tutuyoruz ama frontend bizden indiirimli fiyatıda istedi. Bu noktada indirimli fiyatı veritabanında tutmak gereksiz bir maaliyet olur. Bunun yerine cevap gönderme sırasında indirimli fiyat alanını hesaplayıp gönderilecek cevaba eklersek hem frontend'in ihtiyacını karşılamış oluruz hem de veritabanında gereksiz veri olmaz
-tourSchema.virtual("discountedPrice").get(function () {
-  return this.price - this.priceDiscount;
-});
+// tourSchema.virtual("discountedPrice").get(function () {
+//   return this.price - this.priceDiscount;
+// });
 
 // Örn: Fronten bizden yönlendirme için ürünlerin slug verisini istedi. Bu noktada bu alanı zaten tur ismi üzerinden hesaplayabilceğimiz için veritbanına kaydetmeden virtual property olarak göndermek mantıklı olur
 // Ege Doğa Gezisi ===> ege-doğa-gezisi
