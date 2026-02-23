@@ -6,11 +6,12 @@ import {
   getOneReview,
   updateReview,
 } from "../controllers/reviewController.js";
+import { protect } from "../middlewares/protect.js";
 
 const router = express.Router();
 
-router.route("/").get(getAllReviews).post(createReview);
+router.route("/").get(getAllReviews).post(protect, createReview);
 
-router.route("/:id").get(getOneReview).patch(updateReview).delete(deleteReview);
+router.route("/:id").get(getOneReview).patch(protect, updateReview).delete(protect, deleteReview);
 
 export default router;

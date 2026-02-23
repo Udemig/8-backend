@@ -1,9 +1,11 @@
 import catchAsync from "../utils/catchAsync.js";
 import Review from "../models/reviewModel.js";
 import { NotFound } from "../utils/errors.js";
+import APIFeatures from "../utils/apiFeatures.js";
 
 export const getAllReviews = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find();
+  const reviewFeatures = new APIFeatures(Review.find(), req.query).pagination().sort();
+  const reviews = await reviewFeatures.query;
 
   res.status(200).json({ message: "Yorumlar Listelendi", data: reviews });
 });
@@ -21,7 +23,20 @@ export const getOneReview = catchAsync(async (req, res, next) => {
 });
 
 export const createReview = catchAsync(async (req, res, next) => {
-  res.status(200).json({ message: "İşlem başarılı" });
+  // yorum hangi tura atıldı
+  const tour = req.body.tour;
+  // yorumun rating değeri
+  const rating = req.body.rating;
+  // yorumun açıklamassı
+  const review = req.body.review;
+  // yorumu atan kullanıcı
+  const user = req.user._id;
+
+  // yeni yorumu veritabanına kaydet
+  const newReview = await Review.create({ review, rating, tour, user });
+
+  // client'a cevap gönder
+  res.status(201).json({ message: "Yorum atıldı", data: newReview });
 });
 
 export const updateReview = catchAsync(async (req, res, next) => {
