@@ -433,3 +433,76 @@ User({
 - Aynı değerin tekrar edilmesini engeller
 - `email:{type:String,unique:true}`
 - `reviewSchema.index({ tour: 1, user: 1 }, { unique: true });`
+
+# Medya Depolama
+
+- Resim, video, ses, pdf gibi dosya içeriklerinin backend tarafından yönetilmesi
+- Veritabanları medya içeriklerini depolamak için optimize edilmediğinden dolayı kesinikle doğrudan mongodb içerisinde medya içeriği kaydetmiyeceğiz
+
+## Medya Depolama Akışı
+
+- Bir kullanıcı fotoğraf yüklediğinde ne olur?
+
+1. Client ---> Dosyayı backend'de gönderirir
+2. Backend --> Dosyayı bir storage alanına kaydeder
+3. Backend --> Dosyanın URL'ini veritabanına kaydeder
+4. Client --> Backend'din gönderdiği url sayesinde dosyayı ekrana basar
+
+## Medya Depolama Yöntemleri
+
+1. **Veritabanında Saklama**
+
+- Mongodb'de 16mb belge limiti bulunur
+- Performans maliyetlidir
+- Gerçek hayat seneryolarında kesinlikle önerilmez
+
+2. **Server İçinde Saklama**
+
+- **Avantaj**
+- Basit
+- Küçük projeler için ideal
+- Development modunda tercih edilebilir
+
+- **Dezavantaj**
+- Sunucu çökme seneryosunda dosyalar kaybedilebilir
+- Ölçeklenemez
+- CDN yok
+
+3. **Cloud Storage**
+
+- En doğru yöntem budur
+- **PLATFORMLAR**
+- Amazon S3
+- Cloudinary
+- Google Cloud Storage
+- Firebase Storage
+
+- **Avantaj**
+- Otomatik resize
+- Format dönüşümü
+- CDN hazır
+- Görsel optimazasyon
+- Oto Yedekleme
+- Oto Ölçekleme
+
+---
+
+- **Ölçeklenebilirlik**
+- 1 milyon kullanıcı aynı anda foto yüklerse ne olur
+
+- Eğer server içinde saklıyorsak:
+- Disk dolar
+- Server çöker
+
+- Eğer Cloud platformda saklıyorsak:
+- Otomatik ölçeklenir
+- Yük dengelenir
+
+- **CDN**
+- CDN: Content Delivery Network
+- Kullanıcıya en yakın sunucudan dosya gelir
+- Daha hızlı açılır
+
+- Örnek:
+- Türkiye'deki kullanıcı --> Avrupa Server
+- ABD'deki kullanıcı --> Amerika Server

@@ -1,5 +1,6 @@
 import Tour from "../models/tourModel.js";
 import catchAsync from "../utils/catchAsync.js";
+import { BadRequest } from "../utils/errors.js";
 import * as factory from "../utils/handlerFactory.js";
 
 export const getAllTours = factory.getAll(Tour);
@@ -14,15 +15,6 @@ export const createTour = factory.createOne(Tour);
 export const updateTour = factory.updateOne(Tour);
 
 export const deleteTour = factory.deleteOne(Tour);
-
-// en iyi turları almak için url'e eklenicek parametreleri belirleyen mw
-export const aliasTopTours = (req, res, next) => {
-  req.query.sort = "-ratingsAverage,-ratingsQuantity";
-  req.query.fields = "name,price,imageCover,summary,ratingsAverage,ratingsQuantity";
-  req.query.limit = "5";
-
-  next();
-};
 
 // admin paneli için istatistik hesaplayan fn
 export const getTourStats = catchAsync(async (req, res) => {
@@ -100,4 +92,70 @@ export const getMonthlyPlan = catchAsync(async (req, res) => {
   ]);
 
   res.status(200).json({ message: "Rapor oluşturuldu", data: stats });
+});
+
+// coğrafi filtreleme
+export const getToursWithin = catchAsync(async (req, res) => {
+  // parametrelere eriş
+  const { distance, latlng, unit } = req.params;
+
+  // enlem / boylam değerini dizi formatına çevir
+  const [lat, lng] = latlng.split(",");
+
+  // enlem / boylam verisi sağlnamzsa hata fırlat
+  if (!lat || !lng) throw BadRequest("Lütfen merkez noktasını tanımlayın");
+
+  // daire'nin yarıçapına radyan cinsinden hesapla
+  const radius = unit === "mi" ? distance / 3963.2 : distance / 6378.1;
+
+  // berilenen dairesel alandaki turları al
+  const tours = await Tour.find({
+    startLocation: {
+      $geoWithin: {
+        $centerSphere: [[lat, lng], radius],
+      },
+    },
+  });
+
+  res.status(200).json({
+    message: "Sınırlar içerisindeki turlar alındı",
+    results: tours.length,
+    tours,
+  });
+});
+
+// uzaklık hesaplama
+export const getDistances = catchAsync(async (req, res) => {
+  // url'den parametreleri al
+  const { latlng, unit } = req.params;
+
+  // enlem/boylam'ı dizi formatına çevir
+  const [lat, lng] = latlng.split(",");
+
+  // enlem/boylam gelmediyse hata fırlat
+  if (!lat || !lng) throw new BadRequest("Kullanıcı kordinatları sağlanmadı");
+
+  // turların merkez noktasından uzaklıklarını hesapla
+  const tours = await Tour.aggregate([
+    // 1) uzaklığı hesapla
+    {
+      $geoNear: {
+        near: { type: "Point", coordinates: [+lat, +lng] },
+        distanceField: "distance",
+        distanceMultiplier: unit === "mi" ? 0.000621371 : 0.001,
+      },
+    }, // nesneden istediğimiz değerleri seç
+    {
+      $project: {
+        name: 1,
+        distance: 1,
+      },
+    },
+  ]);
+
+  // client'a cevap gönder
+  res.status(200).json({
+    message: "Uzaklıklar hesaplandı",
+    tours,
+  });
 });

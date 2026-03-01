@@ -4,6 +4,8 @@ const formatQuery = (req, res, next) => {
   //* client'dan gelen parametreler:    { 'rating[gt]': '4', 'price[lte]': '500' }
   //* mongodb'nin istediği format:      { rating:{ $gt: 4 },  price: { $lte: 500 } }
 
+  console.log("formatQuery", req.query);
+
   // 1) urldeki arama parametrelerine eriş
   const queryObj = qs.parse(req.query);
 

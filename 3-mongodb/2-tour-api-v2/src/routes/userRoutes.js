@@ -10,12 +10,13 @@ import {
   updateMe,
   updateUser,
 } from "../controllers/userController.js";
+import upload, { resize } from "../utils/upload.js";
 
 const router = express.Router();
 
 router.delete("/delete-me", protect, deleteMe);
 
-router.patch("/update-me", protect, updateMe);
+router.patch("/update-me", protect, upload.single("photo"), resize, updateMe);
 
 router.get("/get-me", protect, getMe);
 

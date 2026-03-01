@@ -139,10 +139,14 @@ tourSchema.pre("find", function () {
 });
 
 //! Aggregate Middleware
-tourSchema.pre("aggregate", function () {
-  // premium olan turları rapora dahil etme
-  this.pipeline().unshift({ $match: { premium: { $ne: true } } });
-});
+// tourSchema.pre("aggregate", function () {
+//   // premium olan turları rapora dahil etme
+//   this.pipeline().push({ $match: { premium: { $ne: true } } });
+// });
+
+//! Index
+// Coğrafi sorguyu gerçekleştirebilmek için eklenmesi zorunlu olan bir index
+tourSchema.index({ startLocation: "2dsphere" });
 
 // yukarıdaki şemayı kullanarak bir model oluştur
 const Tour = mongoose.model("Tour", tourSchema);

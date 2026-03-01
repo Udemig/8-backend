@@ -7,10 +7,13 @@ export const updateMe = catchAsync(async (req, res, next) => {
   // 1) şifreyi güncelleme çalışırsa hata ver
   if (req.body.password || req.body.passwordConfirm) throw new BadRequest("Şifreyi bu yöntemle güncellemeyemezsiniz");
 
-  // 2) kullanıcı bilgilerini güncelle
+  // 2) fotoğraf verisini kullanıcı belgesine ekle
+  if (req.file) req.body.photo = req.file;
+
+  // 3) kullanıcı bilgilerini güncelle
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, { new: true });
 
-  // client'a cevap gönder
+  // 4) client'a cevap gönder
   res.status(200).json({ message: "Hesap bilgileri güncellendi", data: updatedUser });
 });
 
