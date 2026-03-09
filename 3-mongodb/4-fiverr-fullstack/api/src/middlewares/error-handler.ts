@@ -6,7 +6,7 @@ import type { ErrorResponse } from "./../types/index.js";
 const errorHandler = (err: BaseError, req: Request, res: Response, next: NextFunction) => {
   // bilinmeyen hata meydan geldiğinde
   if (!(err instanceof BaseError)) {
-    console.log("❌ Bilinmeyen Hata");
+    console.log("❌ Bilinmeyen Hata", err);
 
     err = new BaseError("Beklenmeyen bir hata oluştu", 500, "INTERNAL_SERVER_ERROR");
   }

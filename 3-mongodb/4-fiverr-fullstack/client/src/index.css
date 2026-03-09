@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark-green: #0a4226;
+  --font-sans: "Macan", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@layer components {
+  .container {
+    @apply max-w-360 mx-auto;
+  }
+}
+
+@layer base {
+  button,
+  a {
+    @apply cursor-pointer transition duration-300;
+  }
+
+  button {
+    @apply active:scale-95 hover:brightness-85;
+  }
+}

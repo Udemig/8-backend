@@ -39,6 +39,15 @@ const userSchema = new Schema(
   {
     timestamps: true,
     versionKey: false,
+    toJSON: {
+      // veri json formatına çevrilirken çalışır
+      transform: function (doc, ret: any) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        return ret;
+      },
+    },
   },
 );
 
