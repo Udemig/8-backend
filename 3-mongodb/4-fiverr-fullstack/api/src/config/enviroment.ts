@@ -6,6 +6,7 @@ export const config = {
   //enviroment
   PORT: process.env.PORT || 3000,
   NODE_ENV: process.env.NODE_ENV as "development" | "production",
+  CLIENT_URL: process.env.CLIENT_URL as string,
 
   // db
   MONGO_URI: process.env.MONGO_URI as string,

@@ -5,6 +5,11 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import Search from "./pages/detail";
+import Detail from "./pages/detail";
+import AddGig from "./pages/add-gig";
+import MyGigs from "./pages/search";
+import Protect from "./components/protect";
 
 const App: FC = () => {
   return (
@@ -17,6 +22,15 @@ const App: FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+
+            <Route path="/search" element={<Search />} />
+            <Route path="/detail/:id" element={<Detail />} />
+
+            {/* Sadece satıcı hesapları bu sayfalara erişebilsin */}
+            <Route element={<Protect />}>
+              <Route path="/add-gig" element={<AddGig />} />
+              <Route path="/my-gigs" element={<MyGigs />} />
+            </Route>
           </Routes>
         </main>
 
