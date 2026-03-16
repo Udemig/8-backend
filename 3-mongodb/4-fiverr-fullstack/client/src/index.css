@@ -25,6 +25,18 @@
   .header-link {
     @apply px-5 py-2 hover:bg-gray-100;
   }
+
+  .warning {
+    @apply py-10 px-5 text-lg rounded-lg bg-orange-500/50 text-white text-center my-40;
+  }
+
+  .layout {
+    @apply grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 my-5;
+  }
+
+  .button {
+    @apply py-1 px-3 rounded-md min-w-20 text-white;
+  }
 }
 
 @layer base {

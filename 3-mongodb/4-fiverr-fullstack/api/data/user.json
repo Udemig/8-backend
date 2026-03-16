@@ -1,0 +1,67 @@
+[
+  {
+    "_id": { "$oid": "69b691559c900256b932b3f3" },
+    "username": "ali_yilmaz",
+    "email": "ali.yilmaz@example.com",
+    "password": "$2b$10$examplehashedpassword1",
+    "country": "Turkey",
+    "profilePicture": "default",
+    "isSeller": false,
+    "phone": "+905551112233",
+    "description": "Frontend developer ve freelance projelerle ilgileniyorum.",
+    "createdAt": { "$date": "2024-01-12T10:21:00.000Z" },
+    "updatedAt": { "$date": "2024-01-12T10:21:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "69b691559c900256b932b3f4" },
+    "username": "ayse_kara",
+    "email": "ayse.kara@example.com",
+    "password": "$2b$10$examplehashedpassword2",
+    "country": "Turkey",
+    "profilePicture": "default",
+    "isSeller": true,
+    "phone": "+905552223344",
+    "description": "UI/UX tasarımcı ve dijital ürün satıcısı.",
+    "createdAt": { "$date": "2024-02-05T14:12:00.000Z" },
+    "updatedAt": { "$date": "2024-02-05T14:12:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "69b691559c900256b932b3f5" },
+    "username": "john_dev",
+    "email": "john.dev@example.com",
+    "password": "$2b$10$examplehashedpassword3",
+    "country": "USA",
+    "profilePicture": "default",
+    "isSeller": false,
+    "phone": "+12025550123",
+    "description": "Full stack developer.",
+    "createdAt": { "$date": "2024-03-02T09:00:00.000Z" },
+    "updatedAt": { "$date": "2024-03-02T09:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "69b691559c900256b932b3f6" },
+    "username": "maria_design",
+    "email": "maria.design@example.com",
+    "password": "$2b$10$examplehashedpassword4",
+    "country": "Spain",
+    "profilePicture": "default",
+    "isSeller": true,
+    "phone": "+34123456789",
+    "description": "Logo ve branding hizmetleri sunuyorum.",
+    "createdAt": { "$date": "2024-04-11T11:30:00.000Z" },
+    "updatedAt": { "$date": "2024-04-11T11:30:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "69b691559c900256b932b3f7" },
+    "username": "kemal_backend",
+    "email": "kemal.backend@example.com",
+    "password": "$2b$10$examplehashedpassword5",
+    "country": "Turkey",
+    "profilePicture": "default",
+    "isSeller": false,
+    "phone": "+905553334455",
+    "description": "Node.js ve MongoDB backend geliştiricisi.",
+    "createdAt": { "$date": "2024-05-20T16:45:00.000Z" },
+    "updatedAt": { "$date": "2024-05-20T16:45:00.000Z" }
+  }
+]

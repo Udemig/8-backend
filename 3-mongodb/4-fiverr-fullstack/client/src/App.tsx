@@ -5,10 +5,10 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import Search from "./pages/detail";
+import Search from "./pages/search";
 import Detail from "./pages/detail";
 import AddGig from "./pages/add-gig";
-import MyGigs from "./pages/search";
+import MyGigs from "./pages/my-gigs";
 import Protect from "./components/protect";
 
 const App: FC = () => {

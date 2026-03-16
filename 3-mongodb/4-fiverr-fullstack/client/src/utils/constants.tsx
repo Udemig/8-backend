@@ -102,4 +102,10 @@ export const gigInputs = [
     type: "number",
     min: 1,
   },
+  {
+    label: "Kategori",
+    name: "category",
+    type: "select",
+    options: categories.map((i) => i.name),
+  },
 ];

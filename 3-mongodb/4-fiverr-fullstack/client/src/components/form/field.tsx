@@ -10,6 +10,7 @@ interface Props {
   min?: number;
   max?: number;
   multiple?: boolean;
+  options?: string[];
 }
 
 const Field: FC<Props> = ({
@@ -17,6 +18,7 @@ const Field: FC<Props> = ({
   name,
   min,
   max,
+  options,
   placeholder,
   type = "text",
   disabled = false,
@@ -25,9 +27,19 @@ const Field: FC<Props> = ({
 }) => {
   return (
     <div className="mb-5">
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={name} className="text-sm font-medium text-gray-900">
+        {label}
+      </label>
 
-      {type === "textarea" ? (
+      {type === "select" ? (
+        <select id={name} name={name} required={required} disabled={disabled} className="field">
+          {options?.map((item, key) => (
+            <option key={key} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      ) : type === "textarea" ? (
         <textarea
           id={name}
           name={name}
