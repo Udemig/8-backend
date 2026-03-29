@@ -28,7 +28,10 @@ const AddGig: FC = () => {
         </div>
 
         <div className="flex md:justify-center my-5">
-          <button disabled={isPending} className="form-button bg-green-600 w-1/2 max-md:w-full flex justify-center">
+          <button
+            disabled={isPending}
+            className="form-button bg-green-600 w-1/2 max-md:w-full flex justify-center disabled:opacity-75 disabled:cursor-not-allowed"
+          >
             Oluştur
           </button>
         </div>
