@@ -1,0 +1,52 @@
+import { Schema, model } from "mongoose";
+// mongodb schema'sını oluştur
+const userSchema = new Schema({
+    username: {
+        type: String,
+        unique: [true, "Bu kullanıcı ismi zaten kullanımda"],
+        required: [true, "Lütfen username alanını belirleyin"],
+    },
+    email: {
+        type: String,
+        unique: [true, "Bu email adresi zaten kullanımda"],
+        required: [true, "Lütfen email alanını belirleyin"],
+    },
+    password: {
+        type: String,
+        required: [true, "Lütfen password alanını belirleyin"],
+    },
+    country: {
+        type: String,
+        required: [true, "Lütfen country alanını belirleyin"],
+    },
+    profilePicture: {
+        type: String,
+        default: "default",
+    },
+    isSeller: {
+        type: Boolean,
+        default: false,
+    },
+    phone: {
+        type: String,
+    },
+    description: {
+        type: String,
+    },
+}, {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+        // veri json formatına çevrilirken çalışır
+        transform: function (doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.password;
+            return ret;
+        },
+    },
+});
+// mongodb modeli oluştur
+const User = model("User", userSchema);
+export default User;
+//# sourceMappingURL=user.model.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"upload-to-cloud.d.ts","sourceRoot":"","sources":["../../src/utils/upload-to-cloud.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAY5C,QAAA,MAAM,aAAa,GACjB,MAAM,YAAY,EAClB,WAAW,MAAM,EACjB,QAAQ,MAAM,EACd,QAAQ,MAAM,EACd,SAAS,MAAM,EACf,OAAM,OAAO,GAAG,OAAO,GAAG,KAAK,GAAG,MAAe,oDAKlD,CAAC;AAEF,eAAe,aAAa,CAAC"}
