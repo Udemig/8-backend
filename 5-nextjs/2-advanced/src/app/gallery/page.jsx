@@ -1,3 +1,5 @@
+import { notFound, redirect } from "next/navigation";
+
 import Image from "next/image";
 
 import localeImage from "@/assets/nature.jpg";
@@ -6,6 +8,11 @@ const remoteImage =
   "https://images.pexels.com/photos/35627510/pexels-photo-35627510.jpeg?_gl=1*1jmczte*_ga*NjI4NzE0NzIzLjE3NTk4NjM4OTU.*_ga_8JE65Q40S6*czE3NzUzODM1ODUkbzckZzEkdDE3NzUzODM3MTYkajU5JGwwJGgw";
 
 const Page = () => {
+  if ("admin değilse") {
+    // redirect("/");
+    return notFound();
+  }
+
   return (
     <div className="space-y-5">
       <div>

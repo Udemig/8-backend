@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.server {
+  @apply bg-blue-500 text-white text-sm p-2 rounded font-bold mt-2;
+}
+
+.client {
+  @apply bg-red-500 text-white text-sm p-2 rounded font-bold mt-2;
+}

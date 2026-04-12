@@ -1,10 +1,15 @@
 import { data } from "@/utils/constants";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 const Detail = async ({ params }) => {
   // url'deki parametreye eriş
   const { id } = await params;
+
+  if (id > 7) {
+    return notFound();
+  }
 
   // gösterilecek harikanın verisini data'dan bul
   const wonder = data.find((item) => item.id === id);
