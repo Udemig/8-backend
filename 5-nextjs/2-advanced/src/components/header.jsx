@@ -1,5 +1,6 @@
 import { fetchRecipes } from "@/utils/api";
 import Link from "next/link";
+import Navlink from "./navlink";
 
 const Header = async () => {
   const { recipes } = await fetchRecipes();
@@ -9,10 +10,10 @@ const Header = async () => {
       <Link href="/">NEXT</Link>
 
       <nav className="flex gap-5">
-        <Link href="/gallery">Galeri</Link>
-        <Link href="/wonders">Harikalar</Link>
-        <Link href="/recipes-client">Recipes (C)</Link>
-        <Link href="/recipes-server">Recipes (S - {recipes.length})</Link>
+        <Navlink href="/gallery">Galeri</Navlink>
+        <Navlink href="/wonders">Harikalar</Navlink>
+        <Navlink href="/recipes-client">Recipes (C)</Navlink>
+        <Navlink href="/recipes-server">Recipes (S - {recipes.length})</Navlink>
       </nav>
     </header>
   );

@@ -83,3 +83,61 @@
 
 - hem `server` hem de `client` component'larda kullanılabilir
 - 404 sayfasını ekrana basmak
+
+## usePathname
+
+- sadece `client` componentlarda kullanılır
+- kullanıcının bulunduğu yolu url'den alıp getirir
+
+## useParams
+
+- sadece `client` componentlarda kullanılır
+- url'deki parametrelere erişmemizi sağlar
+
+## useSearchParams
+
+- sadece `client` componentlarda kullanılır
+- url'deki query parametrelerine erişmemizi sağlar
+
+# Form
+
+- Normal şartlarda formlarda kullanıcı etkileşimini izlememiz gerektiğinden formların client component olması gerekir.
+- Eğer form'un sadece gönderilme yani onSubmit anını izlemek istiyorsak server action yöntemini kullanarak formu server component olarak oluşturabiliriz
+
+# Static Site Generation (SSG)
+
+- SSG, next.js'İn build sırasında sayfaları html olarak üretip sunucuda saklaması işlemidir.
+- Kullanıcı siteyi ziyaret ettiğinde sayfalar anında ve çok hızlı bir şekilde sunulur çünkü sayfa önceden hazırlanmıştır
+
+## Static Sayfa
+
+- Build anında html hazılanıp sunucuda saklanır, kullanıcı sayfaya girdiğinde tekrar hazırlanmadan kullanıcıya sunulur
+
+## Dinamik Sayfa
+
+- Kullanıcı sayfaya girdiği anda hazırlanıp kullanıcıya sunulan sayfalardır.
+- Genelde url'de paramtresi olan ve sayfa içeriği buna göre değişen sayfalardır.
+
+## Static Sayfayı Dinamik Sayfaya Çevirme (dynamic | revalidate)
+
+- Next.js varsayılan olarak parametreye sahip olmayan bütün sayfaları statik yapar
+- Ama bazen biz bu sayfa içeriklerinin statik olmasını istemyebiliriz.
+- Bu durumda revalidate ve dynamic özellikleri kullanılır
+
+## Dinamic Sayfayı Static Sayfaya Çevirme (generateStaticParams)
+
+- Next.jsx varsayılan olarak urlde parametresi olan bütün sayfaları dinamic yapar.
+- Bunun sebebi url'deki parametrenin ne olucağının belirsiz olmasıdır.
+- Bazı durumlarda detay sayfalarının alabileceği parametreler kısıtlı olur bu tarz durumlarda dinamik olan detay sayfalarını generateStaticParams yöntemiyle static hale çevirmek mümkündür.
+
+# Fullstack Framework
+
+- Next.js bize hem frontend hemde backend kodlarını tek bir proje içerisinde yazmayı vaad ediyor.
+- Next.js, api oluşturuken klasik nodejs/express api'larda fakları olarak next.js'ê has olan routing yöntemini kullanır
+- Backend kodlarını frontend kodlarıyla aynı projede yazmanın faydaları:
+- - pratik
+- - backend için ayrı bir yayınlama gerekmez
+
+- Backend route'Larını oluşturmak için `app klasörü` içerisine `api klasörü` oluşturuyoruz
+- Oluşturmak istediğimiz her endpoint için yeni bir klasör ve o klasör içerisinde `route.js` dosyası oluştururuz
+- Oluşturduğumuz route dosyaları içerisinde cevap vermek istediğimiz HTTP Methoduyla aynı isimde bir fonksiyon tanımlarız.
