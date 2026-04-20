@@ -32,3 +32,17 @@ export const navigationItems = [
     icon: ChartArea,
   },
 ];
+
+export const dateFormat = {
+  year: "numeric",
+  month: "long",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+} as const;
+
+export const statusColors = {
+  Beklemede: "bg-yellow-500",
+  "Devam Ediyor": "bg-blue-500",
+  Çözüldü: "bg-green-500",
+};

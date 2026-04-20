@@ -37,9 +37,16 @@ export async function GET() {
     // ortalama öncelik değerini hesapla
     const averagePriority = +(tickets.reduce((total, ticket) => total + ticket.priority, 0) / totalTickets).toFixed(1);
 
-    // todo: tarihleri hesapla
+    // tarihleri hesapla
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const thisWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const thisYear = new Date(now.getFullYear(), 0, 1);
 
     // tarihe göre hesapla
+    const ticketsCreatedToday = tickets.filter((ticket) => new Date(ticket.createdAt) >= today).length;
+    const ticketsCreatedLast7Days = tickets.filter((ticket) => new Date(ticket.createdAt) >= thisWeek).length;
+    const ticketsCreatedThisYear = tickets.filter((ticket) => new Date(ticket.createdAt) >= thisYear).length;
 
     // client'a cevap gönder
     return res.json({
@@ -51,6 +58,9 @@ export async function GET() {
       completionRate,
       criticalTicket,
       averagePriority,
+      ticketsCreatedToday,
+      ticketsCreatedLast7Days,
+      ticketsCreatedThisYear,
     });
   } catch (err) {
     return res.json(

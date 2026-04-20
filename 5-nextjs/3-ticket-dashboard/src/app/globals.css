@@ -29,6 +29,13 @@ body {
   button {
     @apply cursor-pointer transition duration-300;
   }
+
+  *::-webkit-scrollbar {
+    @apply bg-black w-3.25;
+  }
+  *::-webkit-scrollbar-thumb {
+    @apply bg-zinc-600 rounded cursor-pointer hover:bg-zinc-500 transition;
+  }
 }
 
 @layer components {
