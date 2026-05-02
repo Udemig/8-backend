@@ -46,3 +46,17 @@ export const statusColors = {
   "Devam Ediyor": "bg-blue-500",
   Çözüldü: "bg-green-500",
 };
+
+export const categoryOptions = ["Yazılım Sorunu", "Donanım Sorunu", "Bağlantı Sorunu"];
+
+export const ticketOptions = ["Devam Ediyor", "Beklemede", "Çözüldü"];
+
+export const ticketPriorities = [1, 2, 3, 4, 5];
+
+export enum PriorityLabels {
+  "Çok Düşük" = 1,
+  "Düşük",
+  "Orta",
+  "Yüksek",
+  "Kritik",
+}
