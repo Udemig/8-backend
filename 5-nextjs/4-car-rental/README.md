@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Figma Tasarım Linki
 
-## Getting Started
+- https://www.figma.com/design/1zRit2Y71mG9wO32pHg8dC/Car-Rent-Website-Design---Pickolab-Studio--Community-?node-id=1-6&p=f&t=DbDGJ7BwhutDbgK6-0
 
-First, run the development server:
+# Araç Fotoğraf API
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- https://cdn.imagin.studio/getImage?customer={yourcustomerkey}&make=toyota&modelFamily=corolla&modelRange=corolla-gr&modelVariant=ha&modelYear=2023&powerTrain=petrol&angle=23&paintid=11272&paintDescription=vermillion-red&zoomtype=fullscreen
+- customerkey: hrjavascript-mastert
+
+# Prompts
+
+# İlk Prompt
+
+```jsx
+I want you to create a MONGODB api on this Next.js typescript project that stores car information for my car rental project.
+Endpoint should support filter, pagination and sorting.
+Need 2 endpoints 1 for get all cars 1 for get car details by id.
+Use right agent for this mission.
+Example car data to be stored:
+{
+  make: "Alfa Romeo",
+  modelName: "Giulia",
+  year: 2024,
+  transmission: "Otomatik",
+  fuelType: "Benzin",
+  seats: 5,
+  doors: 4,
+  pricePerDay: 3200,
+  description:
+    "İtalyan tutkusu performansla buluşuyor. Alfa Romeo Giulia; etkileyici tasarımı, hassas yol tutuşu ve sürüş keyfi sunar.",
+  features: [
+    "Spor Modu",
+    "Harman Kardon Ses Sistemi",
+    "Deri Spor Koltuklar",
+    "Çift Bölgeli Klima",
+    "Apple CarPlay",
+    "Aktif Süspansiyon",
+    "Performans Egzozu",
+  ],
+  location: "Miami",
+  isAvailable: true,
+  averageRating: 4.5,
+  totalReviews: 63,
+  mileage: 13400,
+  color: "Rosso Kırmızı",
+  licensePlate: "FL-ALFA9",
+  carType: "Sedan",
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# İkinci Prompt:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Bu prompta sayfa görselleri dosya olarak ekle!!!!!!!!!!!!!!!!
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```jsx
+According to attached files.
+Analyze the syling of the project.
+Create tailwind variables for most used stlylings.
+And create and style the home page of the project according to attached files.
+Fetch car data from nextjs api.
+We wont have favourite system because of it do not render heart on cards.
+For car pictures use this imagin studios api to generate car pic:
+- https://cdn.imagin.studio/getImage?customer={yourcustomerkey}&make=toyota&modelFamily=corolla&modelRange=corolla-gr&modelVariant=ha&modelYear=2023&powerTrain=petrol&angle=23&paintid=11272&paintDescription=vermillion-red&zoomtype=fullscreen
+- customerkey: hrjavascript-mastery
+```

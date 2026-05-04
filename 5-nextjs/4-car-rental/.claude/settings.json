@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "WebFetch(domain:www.figma.com)",
+      "WebSearch",
+      "WebFetch(domain:code.grida.co)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/api/cars?limit=2)",
+      "Bash(curl -s http://localhost:3000/)"
+    ]
+  }
+}
