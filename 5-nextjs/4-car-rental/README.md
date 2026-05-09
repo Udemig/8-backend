@@ -48,7 +48,7 @@ Example car data to be stored:
 }
 ```
 
-# İkinci Prompt:
+# Anasayfa Promptu:
 
 - Bu prompta sayfa görselleri dosya olarak ekle!!!!!!!!!!!!!!!!
 
@@ -62,4 +62,24 @@ We wont have favourite system because of it do not render heart on cards.
 For car pictures use this imagin studios api to generate car pic:
 - https://cdn.imagin.studio/getImage?customer={yourcustomerkey}&make=toyota&modelFamily=corolla&modelRange=corolla-gr&modelVariant=ha&modelYear=2023&powerTrain=petrol&angle=23&paintid=11272&paintDescription=vermillion-red&zoomtype=fullscreen
 - customerkey: hrjavascript-mastery
+```
+
+# Listeleme Sayfası Promptu
+
+- Bu prompta sayfa görselini dosya olarak ekle!
+
+# Detay Sayfası Promptu
+
+- Bu prompta sayfa görselini dosya olarak ekle!
+
+# Authentication Prompt
+
+```jsx
+I want Authentication on this project.
+Users should be able to register, login, logout.
+Nextauth.js should be used in authentication.
+We should support both email/password and google login.
+We need login and sign up pages.
+Header buttons should change based on authenticated user, if user is not authenticated he should see login and sign up buttons if he is authenticated then he should see ProfilePicture (if he doesnt have picture first letter of the name).
+On register page we need first name, last name, email, phone, password, confirm password inputs
 ```

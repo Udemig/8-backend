@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Bell, Search, Settings, SlidersHorizontal } from "lucide-react";
+import AuthMenu from "@/components/layout/AuthMenu";
 
 export default function Header() {
   return (
@@ -9,11 +10,9 @@ export default function Header() {
           <Link href="/" className="text-primary text-[28px] lg:text-[32px] font-bold leading-none">
             MORENT
           </Link>
-          <button
-            type="button"
-            className="md:hidden size-11 rounded-full overflow-hidden border border-border bg-secondary-300/20"
-            aria-label="Account"
-          />
+          <div className="md:hidden">
+            <AuthMenu />
+          </div>
         </div>
 
         <div className="flex-1 max-w-123">
@@ -48,11 +47,7 @@ export default function Header() {
           >
             <Settings size={20} strokeWidth={2} />
           </button>
-          <button
-            type="button"
-            className="size-11 rounded-full overflow-hidden border border-border bg-secondary-300/20"
-            aria-label="Account"
-          />
+          <AuthMenu />
         </div>
       </div>
     </header>

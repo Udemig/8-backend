@@ -14,6 +14,7 @@ export type CarType =
   | "Minivan";
 
 export interface ICar {
+  _id: string;
   make: string;
   modelName: string;
   year: number;
@@ -54,12 +55,16 @@ export const CAR_TYPES: CarType[] = [
 
 export type CarListItem = Pick<
   ICar,
-  | "make"
-  | "modelName"
-  | "year"
-  | "carType"
-  | "transmission"
-  | "fuelType"
-  | "seats"
-  | "pricePerDay"
+  "make" | "modelName" | "year" | "carType" | "transmission" | "fuelType" | "seats" | "pricePerDay"
 > & { _id: string };
+
+export interface CheckoutBody {
+  carId: string;
+  pickupDate: string;
+  pickupTime: string;
+  returnDate: string;
+  returnTime: string;
+  pickupLocation: string;
+  dropoffLocation: string;
+  notes?: "";
+}

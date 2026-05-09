@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Fuel, Settings, Users } from "lucide-react";
 import type { CarListItem } from "@/types/car.types";
 import { buildCarImageUrl } from "@/utils/imagin.utils";
@@ -55,12 +56,12 @@ export default function CarCard({ car }: CarCardProps) {
           ₺{car.pricePerDay.toFixed(0)}
           <span className="text-secondary-300 text-xs lg:text-sm font-bold">/ gün</span>
         </p>
-        <button
-          type="button"
-          className="bg-primary hover:opacity-90 text-white text-sm font-semibold px-5 h-10 lg:h-11 rounded"
+        <Link
+          href={`/cars/${car._id}`}
+          className="bg-primary hover:opacity-90 text-white text-sm font-semibold px-5 h-10 lg:h-11 rounded inline-flex items-center justify-center"
         >
           Kirala
-        </button>
+        </Link>
       </footer>
     </article>
   );
