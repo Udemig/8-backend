@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IOrder {
   _id: string;
@@ -7,11 +7,12 @@ export interface IOrder {
   totalAmount: number;
   currency: string;
   status: "pending" | "paid" | "cancelled";
+  type: string;
   rental: {
     pickupDate: Date;
     returnDate: Date;
     pickupTime: string;
-    returntTime: string;
+    returnTime: string;
     pickupLocation: string;
     dropoffLocation: string;
     days: number;
@@ -21,4 +22,72 @@ export interface IOrder {
   updatedAt: Date;
 }
 
-//TODO: SİPARİŞ ŞEMASI OLUŞTUR
+const orderSchema = new Schema<IOrder>(
+  {
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: "Car",
+      required: true,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+    currency: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "paid", "cancelled"],
+      default: "pending",
+    },
+    rental: {
+      pickupDate: {
+        type: Date,
+        required: true,
+      },
+      returnDate: {
+        type: Date,
+        required: true,
+      },
+      pickupTime: {
+        type: String,
+        required: true,
+      },
+      returnTime: {
+        type: String,
+        required: true,
+      },
+      pickupLocation: {
+        type: String,
+        required: true,
+      },
+      dropoffLocation: {
+        type: String,
+        required: true,
+      },
+      days: {
+        type: Number,
+        required: true,
+      },
+      notes: {
+        type: String,
+      },
+    },
+  },
+  { timestamps: true, versionKey: false },
+);
+
+const Order = mongoose.models.Order || mongoose.model<IOrder>("Order", orderSchema);
+
+export default Order;

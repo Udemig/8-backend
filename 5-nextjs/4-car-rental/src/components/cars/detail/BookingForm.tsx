@@ -17,6 +17,31 @@ const labelClass = "text-secondary-500 text-sm font-bold";
 const fieldBase =
   "h-11 w-full rounded border border-border bg-card px-3 text-sm text-secondary-500 outline-none focus:border-primary";
 
+const formatDateInput = (d: Date) => {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+// En erken seçilebilir teslim alma tarih + saat (şimdiden +1 saat, tam saate yukarı yuvarlanır).
+const getMinPickup = () => {
+  const minPickup = new Date(Date.now() + 60 * 60 * 1000);
+  let minHour = minPickup.getHours();
+  if (minPickup.getMinutes() > 0 || minPickup.getSeconds() > 0) minHour += 1;
+
+  if (minHour > 18) {
+    const next = new Date(minPickup);
+    next.setDate(next.getDate() + 1);
+    next.setHours(0, 0, 0, 0);
+    return { minDate: formatDateInput(next), minTime: "09:00" };
+  }
+  if (minHour < 9) {
+    return { minDate: formatDateInput(minPickup), minTime: "09:00" };
+  }
+  return { minDate: formatDateInput(minPickup), minTime: `${String(minHour).padStart(2, "0")}:00` };
+};
+
 export default function BookingForm({ carId, pricePerDay, location }: BookingFormProps) {
   const { data: session } = useSession();
   const [pickupDate, setPickupDate] = useState("");
@@ -24,11 +49,28 @@ export default function BookingForm({ carId, pricePerDay, location }: BookingFor
   const [returnDate, setReturnDate] = useState("");
   const [returnTime, setReturnTime] = useState("10:00");
   const [notes, setNotes] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { minDate: minPickupDate, minTime: minPickupTime } = getMinPickup();
+
+  const isPickupTimeBlocked = (t: string) => pickupDate === minPickupDate && t < minPickupTime;
+  const isReturnTimeBlocked = (t: string) =>
+    Boolean(pickupDate) && pickupDate === returnDate && t <= pickupTime;
+
+  const isFormInvalid =
+    !pickupDate ||
+    !returnDate ||
+    pickupDate < minPickupDate ||
+    (pickupDate === minPickupDate && pickupTime < minPickupTime) ||
+    returnDate < pickupDate ||
+    (pickupDate === returnDate && returnTime <= pickupTime);
 
   async function onSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
+      setIsLoading(true);
+
       const res = await fetch("/api/checkout", {
         method: "POST",
         body: JSON.stringify({
@@ -45,9 +87,19 @@ export default function BookingForm({ carId, pricePerDay, location }: BookingFor
 
       const data = await res.json();
 
-      console.log(data);
+      // ödeme sayfasına yönlendir
+      window.location.href = data.url;
+
+      // state'leri sıfırla
+      setPickupDate("");
+      setPickupTime("10:00");
+      setReturnDate("");
+      setReturnTime("10:00");
+      setNotes("");
     } catch (error) {
       alert("Ödeme anında bir hata oluştu");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -69,13 +121,14 @@ export default function BookingForm({ carId, pricePerDay, location }: BookingFor
                 className={fieldBase}
                 value={pickupDate}
                 onChange={(e) => setPickupDate(e.target.value)}
+                min={minPickupDate}
               />
             </label>
             <label className="flex flex-col gap-1.5">
               <span className="text-secondary-300 text-xs font-medium">Saat</span>
               <select className={fieldBase} value={pickupTime} onChange={(e) => setPickupTime(e.target.value)}>
                 {TIME_OPTIONS.map((t) => (
-                  <option key={t} value={t}>
+                  <option key={t} value={t} disabled={isPickupTimeBlocked(t)}>
                     {t}
                   </option>
                 ))}
@@ -94,14 +147,14 @@ export default function BookingForm({ carId, pricePerDay, location }: BookingFor
                 className={fieldBase}
                 value={returnDate}
                 onChange={(e) => setReturnDate(e.target.value)}
-                min={pickupDate || undefined}
+                min={pickupDate || minPickupDate}
               />
             </label>
             <label className="flex flex-col gap-1.5">
               <span className="text-secondary-300 text-xs font-medium">Saat</span>
               <select className={fieldBase} value={returnTime} onChange={(e) => setReturnTime(e.target.value)}>
                 {TIME_OPTIONS.map((t) => (
-                  <option key={t} value={t}>
+                  <option key={t} value={t} disabled={isReturnTimeBlocked(t)}>
                     {t}
                   </option>
                 ))}
@@ -155,11 +208,11 @@ export default function BookingForm({ carId, pricePerDay, location }: BookingFor
           </button>
         ) : (
           <button
-            disabled={!session?.user}
+            disabled={!session?.user || isLoading || isFormInvalid}
             type="submit"
             className="bg-primary hover:opacity-90 text-white text-sm font-semibold h-12 rounded disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Rezerve Et
+            {isLoading ? "Yükleniyor..." : "Rezerve Et"}
           </button>
         )}
       </form>

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
-import { LogOut, User as UserIcon } from "lucide-react";
+import { LogOut, Receipt, User as UserIcon } from "lucide-react";
 
 function getInitial(name?: string | null, email?: string | null): string {
   const source = (name ?? email ?? "?").trim();
@@ -85,6 +85,14 @@ export default function AuthMenu() {
           >
             <UserIcon size={16} strokeWidth={2} />
             Profilim
+          </Link>
+          <Link
+            href="/orders"
+            className="flex items-center gap-3 px-4 py-3 text-sm text-secondary-500 hover:bg-secondary-300/10 border-t border-border"
+            onClick={() => setOpen(false)}
+          >
+            <Receipt size={16} strokeWidth={2} />
+            Siparişlerim
           </Link>
           <button
             type="button"

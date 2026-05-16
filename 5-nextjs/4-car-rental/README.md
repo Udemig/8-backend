@@ -83,3 +83,14 @@ We need login and sign up pages.
 Header buttons should change based on authenticated user, if user is not authenticated he should see login and sign up buttons if he is authenticated then he should see ProfilePicture (if he doesnt have picture first letter of the name).
 On register page we need first name, last name, email, phone, password, confirm password inputs
 ```
+
+# Success & Cancel Prompt
+
+```
+Create success and cancel pages.
+User auto navigates to these pages after checkout screen.
+If checkout is done user navigate to success page if checkout is expired user navigates to cancel page.
+When user navigates to these pages there is url params for shows whic order is paid or cancelled:
+example url: http://localhost:3000/success?orderId=6a0061d691efd820d98ec810
+
+```

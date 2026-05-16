@@ -2,6 +2,7 @@ import { notFound, serverError, unauthorized } from "@/lib/api/errors";
 import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import Car from "@/models/Car";
+import Order from "@/models/Order";
 import { CheckoutBody, ICar } from "@/types/car.types";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -69,18 +70,38 @@ export async function POST(req: Request) {
       ),
     };
 
+    // sipariş verisini veritabanına kaydet
+    const order = await Order.create({
+      product: car._id,
+      user: session.user.id,
+      totalAmount: productInfo.quantity * car.pricePerDay,
+      currency: "TRY",
+      type: "rental",
+      status: "pending",
+      rental: {
+        pickupDate: new Date(body.pickupDate),
+        returnDate: new Date(body.returnDate),
+        pickupTime: body.pickupTime,
+        returnTime: body.returnTime,
+        pickupLocation: body.pickupLocation,
+        dropoffLocation: body.dropoffLocation,
+        notes: body.notes,
+        days: productInfo.quantity,
+      },
+    });
+
     // stripe ödeme oturumunu oluştur
     const checkoutSession = await stripe.checkout.sessions.create({
       line_items: [productInfo],
       mode: "payment",
       metadata: {
-        userId: session.user.id,
+        userId: session.user.id.toString(),
+        orderId: order._id.toString(),
       },
-      success_url: `${process.env.AUTH_URL}/success`,
-      cancel_url: `${process.env.AUTH_URL}/cancel`,
+      success_url: `${process.env.AUTH_URL}/success?orderId=${order._id.toString()}`,
+      cancel_url: `${process.env.AUTH_URL}/cancel?orderId=${order._id.toString()}`,
+      expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
     });
-
-    // todo: sipariş verisini veritabanına kaydet
 
     // clienta cevap gönder
     return NextResponse.json({
