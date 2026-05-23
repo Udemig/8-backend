@@ -148,6 +148,7 @@ class CustomerRepository {
 
       throw new Error("Unable to add to cart!");
     } catch (err) {
+      console.log("HATAAA", err);
       throw new APIError("API Error", STATUS_CODES.INTERNAL_ERROR, "Unable to Create Customer");
     }
   }

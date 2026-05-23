@@ -1,8 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const amqplib = require("amqplib");
-
-const { APP_SECRET, RABBITMQ_URI, EXCHANGE_NAME } = require("../config");
+const { APP_SECRET, RABBITMQ_URI, EXCHANGE_NAME, QUEUE_NAME } = require("../config");
 
 //Utility functions
 module.exports.GenerateSalt = async () => {
@@ -71,7 +70,31 @@ module.exports.CreateChannel = async () => {
 };
 
 //! Mesaj Yayınla
-module.exports.PublishMessage = async () => {};
+module.exports.PublishMessage = async (channel, routingKey, message) => {
+  try {
+    await channel.publish(EXCHANGE_NAME, routingKey, Buffer.from(JSON.stringify(message)));
+
+    console.log("🚨 Mesaj kanala gönderildi");
+  } catch (error) {
+    throw error;
+  }
+};
 
 //! Mesaj Kuyruğuna Abone OL
-module.exports.SubscribeQueue = async () => {};
+module.exports.SubscribeQueue = async (channel, routingKey) => {
+  try {
+    // yeni bir kuyruk oluştur
+    const appQueue = await channel.assertQueue(QUEUE_NAME);
+
+    // kuyruğu kanala bağla
+    channel.bindQueue(appQueue.queue, EXCHANGE_NAME, routingKey);
+
+    // kuyruktaki mesajlara abone ol
+    channel.consume(appQueue.queue, (data) => {
+      console.log("🚨 Kuyruktan mesaj alındı");
+      console.log(data.content.toString());
+    });
+  } catch (error) {
+    throw error;
+  }
+};

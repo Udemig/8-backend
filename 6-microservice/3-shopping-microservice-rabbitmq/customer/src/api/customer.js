@@ -1,8 +1,13 @@
+const { CUSTOMER_ROUTING_KEY } = require("../config");
 const CustomerService = require("../services/customer-service");
+const { SubscribeQueue } = require("../utils");
 const UserAuth = require("./middlewares/auth");
 
-module.exports = (app) => {
+module.exports = (app, channel) => {
   const service = new CustomerService();
+
+  // Diğer servislerden gelen mesajlara abone ol
+  SubscribeQueue(channel, CUSTOMER_ROUTING_KEY, service);
 
   app.post("/signup", async (req, res, next) => {
     try {

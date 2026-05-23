@@ -48,17 +48,16 @@ class ShoppingService {
     }
   }
 
-  // ! WEBHOKKA İSTEK GELİNCE ÇALIŞICAK FONKSİYON
   async SubscribeEvents(payload) {
     const { event, data } = payload;
     const { userId, product, qty } = data;
 
     switch (event) {
       case "ADD_TO_CART":
-        this.ManageCart(userId, product, qty, false);
+        await this.ManageCart(userId, product, qty, false);
         break;
       case "REMOVE_FROM_CART":
-        this.ManageCart(userId, product, qty, true);
+        await this.ManageCart(userId, product, qty, true);
         break;
       default:
         break;

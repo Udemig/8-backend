@@ -1,8 +1,9 @@
 const ProductService = require("../services/product-service");
 const UserAuth = require("./middlewares/auth");
-const { PublishCustomerEvent, PublishShoppingEvent } = require("../utils");
+const { PublishMessage } = require("../utils");
+const { CUSTOMER_ROUTING_KEY, SHOPPING_ROUTING_KEY } = require("../config");
 
-module.exports = (app) => {
+module.exports = (app, channel) => {
   const service = new ProductService();
 
   app.post("/product/create", async (req, res, next) => {
@@ -63,8 +64,11 @@ module.exports = (app) => {
     try {
       const product = await service.GetProductById(req.body._id);
 
-      //* customer servisine haber ver
-      await PublishCustomerEvent({ event: "ADD_TO_WISHLIST", data: { userId: _id, product } });
+      //* gönderilecek mesajı ayarla
+      const message = { event: "ADD_TO_WISHLIST", data: { userId: _id, product } };
+
+      //* customer kuyruğuna mesaj olarak gönder
+      await PublishMessage(channel, CUSTOMER_ROUTING_KEY, message);
 
       return res.status(200).json({ message: "Ürün istek listesine eklendi" });
     } catch (err) {}
@@ -77,8 +81,11 @@ module.exports = (app) => {
     try {
       const product = await service.GetProductById(productId);
 
-      //* customer servisine haber ver
-      await PublishCustomerEvent({ event: "REMOVE_FROM_WISHLIST", data: { userId: _id, product } });
+      //* mesajı hazırla
+      const message = { event: "REMOVE_FROM_WISHLIST", data: { userId: _id, product } };
+
+      //* customer kuyruğuna mesajı gönder
+      await PublishMessage(channel, CUSTOMER_ROUTING_KEY, message);
 
       return res.status(200).json({ message: "Ürün istek listesinden kaldırıldı" });
     } catch (err) {
@@ -92,11 +99,12 @@ module.exports = (app) => {
     try {
       const product = await service.GetProductById(_id);
 
-      //* customer servisine haber ver
-      await PublishCustomerEvent({ event: "ADD_TO_CART", data: { userId: req.user._id, product, qty } });
+      const message = { event: "ADD_TO_CART", data: { userId: req.user._id, product, qty } };
 
-      //* shopping servisine haber ver
-      await PublishShoppingEvent({ event: "ADD_TO_CART", data: { userId: req.user._id, product, qty } });
+      //* customer kuyruğuna haber ver
+      await PublishMessage(channel, CUSTOMER_ROUTING_KEY, message);
+      //* shopping kuyruğuna haber ver
+      await PublishMessage(channel, SHOPPING_ROUTING_KEY, message);
 
       return res.status(200).json({ message: "Ürün sepete eklendi" });
     } catch (err) {
@@ -110,11 +118,12 @@ module.exports = (app) => {
     try {
       const product = await service.GetProductById(req.params.id);
 
-      //* customer servisine haber ver
-      await PublishCustomerEvent({ event: "REMOVE_FROM_CART", data: { userId: _id, product, qty: 0 } });
-
-      //* shopping servisine haber ver
-      await PublishShoppingEvent({ event: "REMOVE_FROM_CART", data: { userId: req.user._id, product, qty: 0 } });
+      // mesajı hazırla
+      const message = { event: "REMOVE_FROM_CART", data: { userId: _id, product, qty: 0 } };
+      //* customer kuyruğuna haber ver
+      await PublishMessage(channel, CUSTOMER_ROUTING_KEY, message);
+      //* shopping kuyruğuna haber ver
+      await PublishMessage(channel, SHOPPING_ROUTING_KEY, message);
 
       return res.status(200).json({ message: "Ürün sepetten kaldırıldı" });
     } catch (err) {
