@@ -60,3 +60,10 @@ RATE_LIMIT_MAX_REQ=100
 ```
 
 Tüm servisler ayağa kalkarken bu değişkenleri **Zod ile valide edicek** eksik veya yanlış formatlı varsa servis HİÇ başlamaz (fail-fast)
+
+# Docker Komut
+
+- docker compose down -v --remove-orphans;
+- docker compose pull;
+- docker compose up -d --force-recreate;
+- docker compose logs -f

@@ -1,6 +1,6 @@
 {
-  "type": "module",
   "name": "auth",
+  "type": "module",
   "scripts": {
     "dev": "nodemon --config nodemon.json",
     "build": "tsc",
