@@ -10,6 +10,7 @@ class RabbitMQService {
   private readonly exchangeName = "food_delivery_exchange";
   private isShuttingDown = false;
 
+  //* Kurulum
   async initialize() {
     const url = process.env.RABBITMQ_URI;
 
@@ -39,6 +40,7 @@ class RabbitMQService {
     }
   }
 
+  //* Kanalı kapat
   async close(): Promise<void> {
     this.isShuttingDown = true;
 
@@ -51,7 +53,24 @@ class RabbitMQService {
     }
   }
 
-  async publishMessage() {}
+  //* Mesajı yayınla
+  async publishMessage(routingKey: string, rawMessage: unknown): Promise<void> {
+    // ileştişim kanalı açık mı kontrol et
+    if (!this.channel) throw new Error("RabbitMQ kanalı mevcut değil");
+
+    // mesajı buffer formatına çevir
+    const message = Buffer.from(JSON.stringify(rawMessage));
+
+    // kanala mesajı gönder
+    this.channel.publish(this.exchangeName, routingKey, message, {
+      persistent: true,
+      contentType: "application/json",
+      messageId: crypto.randomUUID(),
+      timestamp: Date.now(),
+    });
+
+    console.log(`📤 [${routingKey}] mesaj yayımlandı`);
+  }
 }
 
 export default new RabbitMQService();

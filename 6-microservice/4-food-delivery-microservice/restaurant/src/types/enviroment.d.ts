@@ -1,3 +1,5 @@
+import type { UserRole } from "./index.ts";
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -9,4 +11,14 @@ declare global {
       RATE_LIMIT_MAX_REQ: string;
     }
   }
+
+  namespace Express {
+    interface Request {
+      user?: {
+        userId: string;
+        role: UserRole;
+      };
+    }
+  }
 }
+export {};

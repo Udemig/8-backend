@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { AppError } from "./utils/app-error.js";
+import jwt from "jsonwebtoken";
+import type { JWTPayload, UserRole } from "./types/index.js";
 
 //* Error Middleware
 export const errorMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -12,10 +14,45 @@ export const errorMiddleware = (err: Error, req: Request, res: Response, next: N
     console.log("[ERROR]", message);
   }
 
-  res.status(200).json({ status: "error", message });
+  res.status(statusCode).json({ status: "error", message });
 };
 
 //* 404 Middleware
 export const notFoundMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({ status: "error", message: "İstek attığınız adres bulunamadı" });
+};
+
+//* Authenticate Middleware: JWT kontrolü
+export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // token var mı kontrolü
+    const accessToken = req.cookies.token;
+    if (!accessToken) throw new AppError("Token bulunamadı", 401);
+
+    // token geçerli mi kontrolü
+    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET) as JWTPayload;
+
+    // kullanıcıya controller'da erişebilmek için ...
+    req.user = decoded;
+    next();
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    if (error instanceof jwt.TokenExpiredError) throw new AppError("Tokenın süresi doldu", 401);
+    throw new AppError("Token geçersiz", 401);
+  }
+};
+
+//* Rol Kontrol Middleware
+export const authorize = (roles: UserRole[]) => {
+  // istek atan kullanınıcın bilgilerine req üzeirnden erişmek için route handler fonksiyonu tanımladık
+  return (req: Request, res: Response, next: NextFunction): void => {
+    // kullanıcı yoksa:
+    if (!req.user) throw new AppError("Kullanıcı bulunamadı");
+
+    // rolü yetersize:
+    if (!roles.includes(req.user.role)) throw new AppError("Bu işlemi gerçekleştirmek için yetkiniz yok", 403);
+
+    // rolü yeterliyse:
+    next();
+  };
 };
