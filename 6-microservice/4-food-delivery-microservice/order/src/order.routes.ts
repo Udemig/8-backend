@@ -1,10 +1,17 @@
 import express from "express";
 import orderController from "./order.controller.js";
+import { authenticate, authorize } from "./order.middleware.js";
 
 const router = express.Router();
 
-router.post("/x", orderController.x);
-router.post("/y", orderController.y);
-router.post("/z", orderController.z);
+router.post("/", authenticate, orderController.createOrder);
+router.get("/user/:userId", authenticate, orderController.getUserOrders);
+router.get("/:orderId", authenticate, orderController.getOrderById);
+router.patch(
+  "/:orderId/status",
+  authenticate,
+  authorize(["admin", "restaurant_owner"]),
+  orderController.updateOrderStatus,
+);
 
 export default router;
