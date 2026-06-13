@@ -10,7 +10,7 @@ router.get("/:orderId", authenticate, orderController.getOrderById);
 router.patch(
   "/:orderId/status",
   authenticate,
-  authorize(["admin", "restaurant_owner"]),
+  authorize(["admin", "restaurant_owner", "courier"]),
   orderController.updateOrderStatus,
 );
 

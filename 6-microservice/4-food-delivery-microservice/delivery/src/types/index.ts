@@ -5,6 +5,7 @@ export type RouteParams = (req: Request, res: Response, next: NextFunction) => P
 export type UserRole = "customer" | "restaurant_owner" | "courier" | "admin";
 
 export interface IUser {
+  id?: string;
   _id: string;
   email: string;
   password: string;
@@ -23,4 +24,58 @@ export interface JWTPayload {
   role: UserRole;
   iat: number;
   exp: number;
+}
+
+export type OrderStatus = "pending" | "confirmed" | "preparing" | "ready" | "on_the_way" | "delivered" | "cancelled";
+
+export interface IOrderItem {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+export interface IAddress {
+  title: string;
+  address: string;
+  city: string;
+  district: string;
+  postalCode: string;
+  isDefault?: boolean;
+}
+
+export interface IOrder {
+  id: string;
+  userId: string;
+  restaurantId: string;
+  items: IOrderItem[];
+  deliveryFee: number;
+  totalPrice?: number;
+  deliveryAddress: IAddress;
+  paymentMethod: "credit_card" | "cash" | "mobile_payment";
+  status: OrderStatus;
+  specialInstructions: string | undefined;
+}
+
+export interface ICourier {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  status: "available" | "busy" | "offline";
+}
+
+export interface ILocation {
+  lat: number;
+  lon: number;
+}
+
+export interface IDelivery {
+  orderId: string;
+  courierId?: string;
+  status: OrderStatus;
+  location?: ILocation;
+  notes?: string;
+  acceptedAt?: Date;
+  actualDeliveryTime?: Date;
 }

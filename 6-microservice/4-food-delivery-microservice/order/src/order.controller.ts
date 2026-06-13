@@ -1,5 +1,6 @@
 import { orderSchema, validateDTO } from "./order.dto.js";
 import orderService from "./order.service.js";
+import type { OrderStatus } from "./types/index.js";
 import catchAsync from "./utils/catch-async.js";
 
 class OrderController {
@@ -34,22 +35,34 @@ class OrderController {
     });
   });
 
-  // TODO
   getOrderById = catchAsync(async (req, res, next) => {
+    // parametre olarak gelen id'ye eriş
+    const orderId = req.params.orderId as string;
+
+    // servis fonksiyonunu çağır
+    const result = await orderService.getOrderById(orderId);
+
     // client'a cevap gönder
     res.status(200).json({
       status: "success",
-      message: "İşlem başarıyla tamamlandı",
-      data: null,
+      message: "Sipariş bulundu",
+      data: result,
     });
   });
 
   updateOrderStatus = catchAsync(async (req, res, next) => {
+    // client'dan gelen verilere eriş
+    const orderId = req.params.orderId as string;
+    const status = req.body.status as OrderStatus;
+
+    // servis fonksiyonunu çağır
+    const result = await orderService.updateOrderStatus(orderId, status);
+
     // client'a cevap gönder
     res.status(200).json({
       status: "success",
-      message: "İşlem başarıyla tamamlandı",
-      data: null,
+      message: "Sipariş güncellendi",
+      data: result,
     });
   });
 }
