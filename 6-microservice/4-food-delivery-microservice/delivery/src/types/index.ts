@@ -26,7 +26,7 @@ export interface JWTPayload {
   exp: number;
 }
 
-export type OrderStatus = "pending" | "confirmed" | "preparing" | "ready" | "on_the_way" | "delivered" | "cancelled";
+export type OrderStatus = "pending" | "confirmed" | "preparing" | "assigned" | "ready" | "on_the_way" | "delivered" | "cancelled";
 
 export interface IOrderItem {
   productId: string;

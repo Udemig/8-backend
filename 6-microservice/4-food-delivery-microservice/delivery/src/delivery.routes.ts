@@ -12,4 +12,6 @@ router.patch("/:orderId/status", authenticate, authorize(["admin", "courier"]), 
 
 router.get("/:orderId/track", authenticate, deliveryController.trackDelivery);
 
+router.patch("/courier", authenticate, authorize(["admin", "courier"]), deliveryController.updateCourier);
+
 export default router;

@@ -1,4 +1,4 @@
-import { deliveryUpdateSchema, validateDTO } from "./delivery.dto.js";
+import { courierStatusSchema, deliveryUpdateSchema, validateDTO, type CourierStatusInput } from "./delivery.dto.js";
 import deliveryService from "./delivery.service.js";
 import catchAsync from "./utils/catch-async.js";
 
@@ -49,11 +49,30 @@ class DeliveryController {
   });
 
   trackDelivery = catchAsync(async (req, res, next) => {
+    // id parametresini al
+    const orderId = req.params.orderId as string;
+
+    // servis fonksiyonunu çağır
+    const result = await deliveryService.trackDelivery(orderId);
+
     // client'a cevap gönder
     res.status(200).json({
       status: "success",
-      message: "İşlem başarıyla tamamlandı",
-      data: null,
+      message: "Sipariş detayları",
+      data: result,
+    });
+  });
+
+  updateCourier = catchAsync(async (req, res, next) => {
+    const body = await validateDTO(courierStatusSchema, req.body);
+    const courierId = req.user?.userId as string;
+
+    const result = await deliveryService.updateCourierStatus(courierId, body);
+
+    res.status(200).json({
+      status: "success",
+      message: "Kurye durumu güncellendi",
+      data: result,
     });
   });
 }
